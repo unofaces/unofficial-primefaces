@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Unofficial PrimeFaces</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="binaries, sources of unreleased versions">
+    <meta name="author" content="">
+
+    <!-- CSS -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+
+      /* Sticky footer styles
+      -------------------------------------------------- */
+
+      html,
+      body {
+        height: 100%;
+        /* The html and body elements cannot have any padding or margin. */
+      }
+
+      /* Wrapper for page content to push down footer */
+      #wrap {
+        min-height: 100%;
+        height: auto !important;
+        height: 100%;
+        /* Negative indent footer by it's height */
+        margin: 0 auto -60px;
+      }
+
+      /* Set the fixed height of the footer here */
+      #push,
+      #footer {
+        height: 60px;
+      }
+      #footer {
+        background-color: #f5f5f5;
+      }
+
+      /* Lastly, apply responsive CSS fixes as necessary */
+      @media (max-width: 767px) {
+        #footer {
+          margin-left: -20px;
+          margin-right: -20px;
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+      }
+
+
+      /* Custom page CSS
+      -------------------------------------------------- */
+      /* Not required for template or sticky footer method. */
+
+      #wrap > .container {
+        padding-top: 60px;
+      }
+      .container .credit {
+        margin: 20px 0;
+      }
+
+      code {
+        font-size: 80%;
+      }
+
+    </style>
+    <link href="assets/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="assets/css/google-code-prettify.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+  </head>
+
+  <body>
+
+    <div id="wrap">
+
+      <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner">
+          <div class="container">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="brand" href="#">PrimeFaces <span class="label label-important">unofficial</span></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+
+        <h3>Unofficial Releases</h3>
+
+        <p>Unofficial Maven Repository for unreleased PrimeFaces versions.</p>
+
+        <table class="table table-bordered table-hover">
+          <thead>
+          <tr>
+            <th>Version</th>
+            <th>Binary</th>
+            <th>Sources</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td colspan="3">Not yet released.</td>
+          </tr>
+        </table>
+
+        <p>Downloading <strong>official</strong> and <strong>unofficial</strong> releases with Maven:</p>
+
+<pre class="prettyprint lang-xml">
+&lt;repository&gt;
+  &lt;id&gt;prime-github-repo&lt;/id&gt;
+  &lt;name&gt;Unofficial PrimeFaces Maven Repository&lt;/name&gt;
+  &lt;url&gt;http://primefaces.github.com/repository&lt;/url&gt;
+  &lt;layout&gt;default&lt;/layout&gt;
+&lt;/repository&gt;
+</pre>
+
+        <h3>Lastest Official Release</h3>
+
+        <table class="table table-bordered table-hover">
+          <thead>
+          <tr>
+            <th>Version</th>
+            <th>Binary</th>
+            <th>Sources</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>3.5</td>
+            <td><a href="http://primefaces.github.com/repository/org/primefaces/primefaces/3.5/primefaces-3.5.jar">primefaces-3.5.jar</a>
+            <td><a href="http://primefaces.github.com/repository/org/primefaces/primefaces/3.5/primefaces-sources-3.5.jar">primefaces-sources-3.5.jar</a>
+          </tr>
+          </tbody>
+        </table>
+
+        <p>Or go to <a href="http://www.primefaces.org">Official Site</a> for download official releases.</p>
+
+      </div>
+
+      <div id="push"></div>
+    </div>
+
+    <div id="footer">
+      <div class="container">
+        <p class="muted credit">Unofficial Resources for <a href="http://www.primefaces.org">PrimeFaces</a>.</p>
+      </div>
+    </div>
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/google-code-prettify.js"></script>
+
+    <script type="text/javascript">
+!function ($) {
+
+  $(function(){
+
+    // make code pretty
+    window.prettyPrint && prettyPrint()
+
+  })
+
+}(window.jQuery)
+    </script>
+
+  </body>
+</html>
