@@ -93,6 +93,8 @@ public class KeyboardRenderer extends InputRenderer {
 		String clientId = keyboard.getClientId(context);
 		String type = keyboard.isPassword() ? "password" : "text";
         String defaultClass = Keyboard.STYLE_CLASS;
+        defaultClass = !keyboard.isValid() ? defaultClass + " ui-state-error" : defaultClass;
+        defaultClass = keyboard.isDisabled() ? defaultClass + " ui-state-disabled" : defaultClass;
         String styleClass = keyboard.getStyleClass();
         styleClass = styleClass == null ? defaultClass : defaultClass + " " + styleClass;
         String valueToRender = ComponentUtils.getValueToRender(context, keyboard);

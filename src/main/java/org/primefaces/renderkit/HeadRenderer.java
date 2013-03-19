@@ -16,9 +16,6 @@
 package org.primefaces.renderkit;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
 import javax.el.ELContext;
 import javax.el.ExpressionFactory;
 import javax.el.ValueExpression;
@@ -34,13 +31,11 @@ import org.primefaces.util.Constants;
 
 /**
  * Renders head content based on the following order
- * - first facet if defined
+ * - First Facet
  * - Theme CSS
- * - JSF-PF CSS resources
- * - middle facet if defined
- * - JSF-PF JS resources
- * - h:head content (encoded by super class at encodeChildren)
- * - last facet if defined
+ * - Registered Resources
+ * - Head Content
+ * - Last Facet
  */
 public class HeadRenderer extends Renderer {
 
@@ -48,29 +43,11 @@ public class HeadRenderer extends Renderer {
     public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
         writer.startElement("head", component);
-
+        
         //First facet
         UIComponent first = component.getFacet("first");
         if(first != null) {
             first.encodeAll(context);
-        }
-
-        //Registered Resources
-        UIViewRoot viewRoot = context.getViewRoot();
-        ListIterator<UIComponent> iter = (viewRoot.getComponentResources(context, "head")).listIterator();
-        List<UIComponent> styles = new ArrayList<UIComponent>();
-        List<UIComponent> scripts = new ArrayList<UIComponent>();
-        
-        while(iter.hasNext()) {
-            UIComponent resource = (UIComponent) iter.next();
-            String name = (String) resource.getAttributes().get("name");
-
-            if(name != null) {
-                if(name.endsWith(".css"))
-                    styles.add(resource);
-                else if(name.endsWith(".js"))
-                    scripts.add(resource);
-            }
         }
         
         //Theme
@@ -92,20 +69,10 @@ public class HeadRenderer extends Renderer {
             encodeTheme(context, "primefaces-" + theme, "theme.css");
         }
         
-        //Styles
-        for(UIComponent style : styles) {
-            style.encodeAll(context);
-        }
-
-        //Middle facet
-        UIComponent middle = component.getFacet("middle");
-        if(middle != null) {
-            middle.encodeAll(context);
-        }
-        
-        //Scripts
-        for(UIComponent script : scripts) {
-            script.encodeAll(context);
+        //Registered Resources
+        UIViewRoot viewRoot = context.getViewRoot();
+        for (UIComponent resource : viewRoot.getComponentResources(context, "head")) {
+            resource.encodeAll(context);
         }
     }
 
@@ -128,7 +95,8 @@ public class HeadRenderer extends Renderer {
         Resource themeResource = context.getApplication().getResourceHandler().createResource(resource, library);
         if(themeResource == null) {
             throw new FacesException("Error loading theme, cannot find \"" + resource + "\" resource of \"" + library + "\" library");
-        } else {
+        } 
+        else {
             writer.startElement("link", null);
             writer.writeAttribute("type", "text/css", null);
             writer.writeAttribute("rel", "stylesheet", null);

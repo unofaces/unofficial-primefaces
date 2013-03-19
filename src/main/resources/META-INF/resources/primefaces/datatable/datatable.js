@@ -1703,8 +1703,9 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
      * Clears table filters
      */
     clearFilters: function() {
-        $(this.jqId + ' thead th .ui-column-filter').val('');
-        
+        this.thead.find('> tr > th.ui-filter-column > .ui-column-filter').val('');
+        $(this.jqId + '\\:globalFilter').val('');
+
         this.filter();
     },
     
@@ -1866,7 +1867,7 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
             opacity: 0.75,
             cursor: 'move',
             scope: this.id,
-            cancel: 'span.ui-column-resizer',
+            cancel: ':input,.ui-column-resizer',
             drag: function(event, ui) {
                 var droppable = ui.helper.data('droppable-column');
 
