@@ -102,5 +102,7 @@ public abstract class RequestContext {
      */
     public abstract WidgetBuilder getWidgetBuilder();
     
+    public abstract Map<Object,Object> getAttributes();
+    
     public abstract void returnFromDialog(Object data);
 }
