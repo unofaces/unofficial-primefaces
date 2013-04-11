@@ -76,7 +76,7 @@ public abstract class BaseMenuRenderer extends OutcomeTargetRenderer {
             //GET
 			if(menuItem.getUrl() != null || menuItem.getOutcome() != null) {
                 String targetURL = getTargetURL(context, menuItem);
-                String href = disabled ? "javascript:void(0)" : targetURL;
+                String href = disabled ? "#" : targetURL;
 				writer.writeAttribute("href", href, null);
                                 
 				if(menuItem.getTarget() != null) {
@@ -85,7 +85,7 @@ public abstract class BaseMenuRenderer extends OutcomeTargetRenderer {
 			}
             //POST
             else {
-				writer.writeAttribute("href", "javascript:void(0)", null);
+				writer.writeAttribute("href", "#", null);
                 
                 UIComponent form = ComponentUtils.findParentForm(context, menuItem);
                 if(form == null) {
