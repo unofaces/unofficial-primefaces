@@ -273,7 +273,7 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
             this.bindRadioEvents();
         }
         
-        if(this.cfg.selectionMode == 'checkbox') {
+        if(this.isCheckBoxSelectionEnabled()) {
             this.bindCheckboxEvents();
             this.updateHeaderCheckbox();
         }
@@ -845,6 +845,7 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
         };
 
         var $this = this;
+
         options.onsuccess = function(responseXML) {
             var xmlDoc = $(responseXML.documentElement),
             updates = xmlDoc.find("update");
@@ -873,6 +874,10 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
                 $this.alignScrollBody();
             }
 
+            if($this.isCheckBoxSelectionEnabled()) {
+                $this.updateHeaderCheckbox();
+            }
+            
             return true;
         };
 
@@ -980,7 +985,7 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
 
         row.removeClass('ui-state-hover').addClass('ui-state-highlight').attr('aria-selected', true);
         
-        if(this.cfg.selectionMode == 'checkbox') {
+        if(this.isCheckBoxSelectionEnabled()) {
             var checkbox = row.children('td.ui-selection-column').find('> div.ui-chkbox > div.ui-chkbox-box');
             this.selectCheckbox(checkbox);
         }
@@ -1000,7 +1005,7 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
 
         row.removeClass('ui-state-highlight').attr('aria-selected', false);
         
-        if(this.cfg.selectionMode == 'checkbox') {
+        if(this.isCheckBoxSelectionEnabled()) {
             var checkbox = row.children('td.ui-selection-column').find('> div.ui-chkbox > div.ui-chkbox-box');
             this.unselectCheckbox(checkbox);
         }
@@ -1142,7 +1147,7 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
             
             row.removeClass('ui-state-highlight').attr('aria-selected', false);
             
-            if(this.cfg.selectionMode == 'checkbox') {
+            if(this.isCheckBoxSelectionEnabled()) {
                 var checkbox = row.children('td.ui-selection-column').find('> div.ui-chkbox > div.ui-chkbox-box');
                 this.unselectCheckbox(checkbox);
             }
@@ -1680,7 +1685,7 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
     },
     
     isMultipleSelection: function() {
-        return this.cfg.selectionMode == 'multiple' || this.cfg.selectionMode == 'checkbox';
+        return this.cfg.selectionMode == 'multiple' || this.isCheckBoxSelectionEnabled();
     },
     
     /**
@@ -1697,6 +1702,13 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
      */
     isSelectionEnabled: function() {
         return this.cfg.selectionMode != undefined || this.cfg.columnSelectionMode != undefined;
+    },
+
+    /**
+     * Returns true|false if checkbox selection is enabled|disabled
+     */
+    isCheckBoxSelectionEnabled: function() {
+        return this.cfg.selectionMode === 'checkbox';
     },
             
     /**
