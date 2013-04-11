@@ -55,7 +55,6 @@ public abstract class BaseMenuRenderer extends OutcomeTargetRenderer {
 		}
         else {
             boolean disabled = menuItem.isDisabled();
-            String onclick = menuItem.getOnclick();
             
             writer.startElement("a", null);
             writer.writeAttribute("id", menuItem.getClientId(context), null);
@@ -73,34 +72,41 @@ public abstract class BaseMenuRenderer extends OutcomeTargetRenderer {
                 writer.writeAttribute("style", menuItem.getStyle(), null);
             }
                   
-            //GET
-			if(menuItem.getUrl() != null || menuItem.getOutcome() != null) {
-                String targetURL = getTargetURL(context, menuItem);
-                String href = disabled ? "#" : targetURL;
-				writer.writeAttribute("href", href, null);
-                                
-				if(menuItem.getTarget() != null) {
-                    writer.writeAttribute("target", menuItem.getTarget(), null);
-                }
-			}
-            //POST
-            else {
-				writer.writeAttribute("href", "#", null);
-                
-                UIComponent form = ComponentUtils.findParentForm(context, menuItem);
-                if(form == null) {
-                    throw new FacesException("MenuItem must be inside a form element");
-                }
-
-                String command = menuItem.isAjax() ? buildAjaxRequest(context, menuItem, form) : buildNonAjaxRequest(context, menuItem, form, clientId, true);
-
-                onclick = onclick == null ? command : onclick + ";" + command;
-			}
-
-            if(onclick != null && !disabled) {
-                writer.writeAttribute("onclick", onclick, null);
+            if(disabled) {
+                writer.writeAttribute("href", "#", null);
+                writer.writeAttribute("onclick", "return false;", null);
             }
- 
+            else {
+                String onclick = menuItem.getOnclick();
+                
+                //GET
+                if(menuItem.getUrl() != null || menuItem.getOutcome() != null) {                
+                    String targetURL = getTargetURL(context, menuItem);
+                    writer.writeAttribute("href", targetURL, null);
+
+                    if(menuItem.getTarget() != null) {
+                        writer.writeAttribute("target", menuItem.getTarget(), null);
+                    }
+                }
+                //POST
+                else {
+                    writer.writeAttribute("href", "#", null);
+
+                    UIComponent form = ComponentUtils.findParentForm(context, menuItem);
+                    if(form == null) {
+                        throw new FacesException("MenuItem must be inside a form element");
+                    }
+
+                    String command = menuItem.isAjax() ? buildAjaxRequest(context, menuItem, form) : buildNonAjaxRequest(context, menuItem, form, clientId, true);
+
+                    onclick = (onclick == null) ? command : onclick + ";" + command;
+                }
+                
+                if(onclick != null) {
+                    writer.writeAttribute("onclick", onclick, null);
+                }
+            }
+
             if(icon != null) {
                 writer.startElement("span", null);
                 writer.writeAttribute("class", AbstractMenu.MENUITEM_ICON_CLASS + " " + icon, null);
