@@ -273,7 +273,7 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
             this.bindRadioEvents();
         }
         
-        if(this.isCheckBoxSelectionEnabled()) {
+        if(this.isCheckboxSelectionEnabled()) {
             this.bindCheckboxEvents();
             this.updateHeaderCheckbox();
         }
@@ -874,7 +874,7 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
                 $this.alignScrollBody();
             }
 
-            if($this.isCheckBoxSelectionEnabled()) {
+            if($this.isCheckboxSelectionEnabled()) {
                 $this.updateHeaderCheckbox();
             }
             
@@ -922,7 +922,6 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
                 else {
                     this.originRowIndex = row.index();
                     this.cursorIndex = null;
-                    
                     this.selectRow(row, silent);
                 }
             } 
@@ -985,7 +984,7 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
 
         row.removeClass('ui-state-hover').addClass('ui-state-highlight').attr('aria-selected', true);
         
-        if(this.isCheckBoxSelectionEnabled()) {
+        if(this.isCheckboxSelectionEnabled()) {
             var checkbox = row.children('td.ui-selection-column').find('> div.ui-chkbox > div.ui-chkbox-box');
             this.selectCheckbox(checkbox);
         }
@@ -1005,7 +1004,7 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
 
         row.removeClass('ui-state-highlight').attr('aria-selected', false);
         
-        if(this.isCheckBoxSelectionEnabled()) {
+        if(this.isCheckboxSelectionEnabled()) {
             var checkbox = row.children('td.ui-selection-column').find('> div.ui-chkbox > div.ui-chkbox-box');
             this.unselectCheckbox(checkbox);
         }
@@ -1147,7 +1146,7 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
             
             row.removeClass('ui-state-highlight').attr('aria-selected', false);
             
-            if(this.isCheckBoxSelectionEnabled()) {
+            if(this.isCheckboxSelectionEnabled()) {
                 var checkbox = row.children('td.ui-selection-column').find('> div.ui-chkbox > div.ui-chkbox-box');
                 this.unselectCheckbox(checkbox);
             }
@@ -1685,7 +1684,7 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
     },
     
     isMultipleSelection: function() {
-        return this.cfg.selectionMode == 'multiple' || this.isCheckBoxSelectionEnabled();
+        return this.cfg.selectionMode == 'multiple' || this.isCheckboxSelectionEnabled();
     },
     
     /**
@@ -1707,7 +1706,7 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
     /**
      * Returns true|false if checkbox selection is enabled|disabled
      */
-    isCheckBoxSelectionEnabled: function() {
+    isCheckboxSelectionEnabled: function() {
         return this.cfg.selectionMode === 'checkbox';
     },
             
@@ -2029,7 +2028,7 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
 
                 return !(checked || disabled); 
             });
-
+            
             if(uncheckedBoxes.length == 0)
                 this.checkAllToggler.addClass('ui-state-active').children('span.ui-chkbox-icon').addClass('ui-icon ui-icon-check');
             else
