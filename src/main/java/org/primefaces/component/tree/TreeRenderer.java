@@ -105,7 +105,7 @@ public class TreeRenderer extends CoreRenderer {
                 node.setExpanded(true);
                 
                 if(vertical) {
-                    encodeTreeNodeChildren(context, tree, node, clientId, rowKey, tree.isDynamic(), tree.isCheckboxSelection());
+                    encodeTreeNodeChildren(context, tree, node, clientId, rowKey, tree.isDynamic(), tree.isCheckboxSelection(), tree.isDragdrop());
                 }
                 else {
                     encodeHorizontalTreeNodeChildren(context, tree, node, tree.getClientId(context), rowKey, tree.isDynamic(), tree.isCheckboxSelection());
@@ -153,6 +153,10 @@ public class TreeRenderer extends CoreRenderer {
         if(tree.isAnimate()) {
             writer.write(",animate:true");
         }
+        
+        if(tree.isDragdrop()) {
+            writer.write(",dragdrop:true");
+        }
 
         encodeIconStates(context, tree);
         
@@ -183,6 +187,7 @@ public class TreeRenderer extends CoreRenderer {
         boolean selectable = selectionMode != null;
         boolean multiselectable = selectable && selectionMode.equals("single");
         boolean checkbox = selectable && selectionMode.equals("checkbox");
+        boolean dragdrop = tree.isDragdrop();
         
         //enable RTL
         if(ComponentUtils.isRTL(context, tree)) {
@@ -209,7 +214,7 @@ public class TreeRenderer extends CoreRenderer {
 
         if(root != null) {
             root.setExpanded(true);
-            encodeTreeNode(context, tree, root, clientId, null, dynamic, checkbox);
+            encodeTreeNode(context, tree, root, clientId, null, dynamic, checkbox, dragdrop);
         }
 
 		writer.endElement("ul");
@@ -400,7 +405,7 @@ public class TreeRenderer extends CoreRenderer {
         writer.endElement("td");
 	}
  
-	public void encodeTreeNode(FacesContext context, Tree tree, TreeNode node, String clientId, String rowKey, boolean dynamic, boolean checkbox) throws IOException {
+	public void encodeTreeNode(FacesContext context, Tree tree, TreeNode node, String clientId, String rowKey, boolean dynamic, boolean checkbox, boolean dragdrop) throws IOException {
         
         if(rowKey != null) {
             //preselection
@@ -428,7 +433,7 @@ public class TreeRenderer extends CoreRenderer {
             String containerClass = isLeaf ? Tree.LEAF_NODE_CLASS : Tree.PARENT_NODE_CLASS;
             containerClass = selected ? containerClass + " ui-treenode-selected" : containerClass + " ui-treenode-unselected";
             containerClass = uiTreeNode.getStyleClass() == null ? containerClass : containerClass + " " + uiTreeNode.getStyleClass();
-
+            
             writer.startElement("li", null);
                 writer.writeAttribute("id", nodeId, null);
                 writer.writeAttribute("data-rowkey", rowKey, null);
@@ -442,7 +447,10 @@ public class TreeRenderer extends CoreRenderer {
                                 
                 //content
                 String contentClass = selectable ? Tree.SELECTABLE_NODE_CONTENT_CLASS_V : Tree.NODE_CONTENT_CLASS_V;
-                
+                if(dragdrop) {
+                    contentClass += " ui-treenode-droppable";
+                }
+                            
                 writer.startElement("span", null);
                 writer.writeAttribute("class", contentClass, null);
                 writer.writeAttribute("aria-expanded", String.valueOf(expanded), null);
@@ -473,6 +481,10 @@ public class TreeRenderer extends CoreRenderer {
                     writer.endElement("span");
 
                 writer.endElement("span");
+                
+                if(dragdrop) {
+                    encodeDropTarget(context, tree);
+                }
 
                 //children nodes                
                 writer.startElement("ul", null);
@@ -483,7 +495,7 @@ public class TreeRenderer extends CoreRenderer {
                 }
                 
                 if((dynamic && expanded) || !dynamic) {
-                    encodeTreeNodeChildren(context, tree, node, clientId, rowKey, dynamic, checkbox);
+                    encodeTreeNodeChildren(context, tree, node, clientId, rowKey, dynamic, checkbox, dragdrop);
                 }
                 
                 writer.endElement("ul");
@@ -491,20 +503,28 @@ public class TreeRenderer extends CoreRenderer {
             writer.endElement("li");
         } 
         else {
-            encodeTreeNodeChildren(context, tree, node, clientId, rowKey, dynamic, checkbox);
+            encodeTreeNodeChildren(context, tree, node, clientId, rowKey, dynamic, checkbox, dragdrop);
         }
 	}
     
-    public void encodeTreeNodeChildren(FacesContext context, Tree tree, TreeNode node, String clientId, String rowKey, boolean dynamic, boolean checkbox) throws IOException {     
+    public void encodeTreeNodeChildren(FacesContext context, Tree tree, TreeNode node, String clientId, String rowKey, boolean dynamic, boolean checkbox, boolean dragdrop) throws IOException {     
 
         int childIndex = 0;
         for(Iterator<TreeNode> iterator = node.getChildren().iterator(); iterator.hasNext();) {
             String childRowKey = rowKey == null ? String.valueOf(childIndex) : rowKey + UITree.SEPARATOR + childIndex;
 
-            encodeTreeNode(context, tree, iterator.next(), clientId, childRowKey, dynamic, checkbox);
+            encodeTreeNode(context, tree, iterator.next(), clientId, childRowKey, dynamic, checkbox, dragdrop);
 
             childIndex++;
         }
+    }
+    
+    protected void encodeDropTarget(FacesContext context, Tree tree) throws IOException {
+        ResponseWriter writer = context.getResponseWriter();
+        
+        writer.startElement("div", null);
+        writer.writeAttribute("class", "ui-tree-dropnode", null);
+        writer.endElement("div");
     }
 
     protected void encodeIconStates(FacesContext context, Tree tree) throws IOException {
