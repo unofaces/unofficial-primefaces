@@ -80,12 +80,12 @@ public class BreadCrumbRenderer extends BaseMenuRenderer {
                 else
                     encodeMenuItem(context, (MenuItem) child);
 
-				writer.endElement("li");                
-			}
+                    writer.endElement("li");                
+            }
+            
+            writer.endElement("ul");
         }
-        
-        writer.endElement("ul");
-		
+        		
 		writer.endElement("div");
 	}
 	
