@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Unofficial PrimeFaces</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="binaries, sources of unreleased versions">
+    <meta name="author" content="">
+
+    <!-- CSS -->
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/site.css" rel="stylesheet">
+    <link href="/assets/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="/assets/css/google-code-prettify.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-39073912-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+    </script>
+
+  </head>
+
+  <body>
+
+    <div id="wrap">
+
+      <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner">
+          <div class="container">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="brand" href="/">PrimeFaces <span class="label label-important">unofficial</span></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+
+        <h3>3.5.3 (2013-05-08) <i>unofficial</i></h3>
+
+        <p>Here is the full changelog of what 3.5.3 brings, there are <strong>32 filed improvements</strong> and one required special attention.</p>
+
+        <h4>Major Defect in DataTable Sorting and Filtering</h4>
+
+        <p>It was identified an important defect with datatable sorting in combination with filtering where applying a filter causes sorting stated
+        to be lost leading to a visual sort indicator and an unsorted data. This issue has been filed at 5254 and fixed for this release.</p>
+
+        <h4>Defects</h4>
+
+        <ul>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=4641">Issue 4641</a>
+            JavaScript does not updates ViewState after AJAX call in portlet environment
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=4793">Issue 4793</a>
+            MenuItem's href="javascript:void" causing problems in IE
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=4920">Issue 4920</a>
+            Hidden Container Support for Panel and Fieldset
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5189">Issue 5189</a>
+            TieredMenu actions in overlay mode doesn't work for IE8.
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5254">Issue 5254</a>
+            Sorting state get lost in combination with filtering
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5286">Issue 5286</a>
+            SelectOneMenu widgetVar.focus() not working
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5407">Issue 5407</a>
+            FocusRenderer dead code
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5421">Issue 5421</a>
+             stepfactor on spinner in 3.5.2 does not work on integers
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5442">Issue 5442</a>
+            Improve Multipart Request Exception Handling
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5443">Issue 5443</a>
+            Tooltip for Attribute should not be required
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5444">Issue 5444</a>
+            FeedReader size attribute should not be required
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5456">Issue 5456</a>
+            Select All Checkbox not reseting on filtering for DataTable component
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5458">Issue 5458</a>
+            "Select all checkbox" is not synced with row toggle select
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5473">Issue 5473</a>
+            TabView - TabChangeEvent doesn't render contents with dynamic data
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5497">Issue 5497</a>
+            Wrong return type in FileUploadHandler
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5500">Issue 5500</a>
+            Checking a checkbox causes layout change
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5512">Issue 5512</a>
+            SelectOneMenu filter shows wrong items when using up and down keys
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5515">Issue 5515</a>
+            MenuItems of SplitButton do not support Outcomes
+          </li>
+        </ul>
+
+        <h4>Enhancements</h4>
+
+        <ul>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=3534">Issue 3534</a>
+            Problem with components that slide out from overlayPanel
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5433">Issue 5433</a>
+            p:message option for no colon ":" in message
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5434">Issue 5434</a>
+            Pass event object to the Tree's onNodeClick handler
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5499">Issue 5499</a>
+            Wrong CSS cursor in SelectOneMenu custom content items
+          </li>
+        </ul>
+
+        <h4>New Feature</h4>
+
+        <ul>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=3229">Issue 3229</a>
+            No result found message for autocomplete
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=3757">Issue 3757</a>
+            Autocomplete enhancement: cached list for dropdown
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=4416">Issue 4416</a>
+            Emptymessage attribute for treeTable component
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=4612">Issue 4612</a>
+            emptyMessage feature for DataList
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5431">Issue 5431</a>
+            add focus attribute to p:dialog
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5509">Issue 5509</a>
+            Dialog should sync visible state with model
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5510">Issue 5510</a>
+            Dismissable and ShowCloseIcon features for OverlayPanel
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5511">Issue 5511</a>
+            SelectOneMenu filter key events
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5516">Issue 5516</a>
+            SelectOneMenu Filter Input should receive focus on show.
+          </li>
+          <li>
+            <a href="http://code.google.com/p/primefaces/issues/detail?id=5517">Issue 5517</a>
+            SelectOneMenu should select highlighted item on Tab Key
+          </li>
+        </ul>
+
+      </div>
+
+      <div id="push"></div>
+    </div>
+
+    <div id="footer">
+      <div class="container">
+        <p class="muted credit">Unofficial Resources for <a href="http://www.primefaces.org">PrimeFaces</a>.</p>
+      </div>
+    </div>
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/google-code-prettify.js"></script>
+
+    <script type="text/javascript">
+!function ($) {
+
+  $(function(){
+
+    // make code pretty
+    window.prettyPrint && prettyPrint()
+
+  })
+
+}(window.jQuery)
+    </script>
+
+  </body>
+</html>
