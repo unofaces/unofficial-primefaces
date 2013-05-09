@@ -286,7 +286,7 @@ public class AutoCompleteRenderer extends InputRenderer {
         String inputId = clientId + "_input";
         List values = (List) ac.getValue();
         List<String> stringValues = new ArrayList<String>();
-        Converter converter = findConverter(context, ac);
+        Converter converter = ComponentUtils.getConverter(context, ac);
         String var = ac.getVar();
         boolean pojo = var != null;
         boolean disabled = ac.isDisabled();
@@ -372,7 +372,7 @@ public class AutoCompleteRenderer extends InputRenderer {
     
     protected void encodeSuggestions(FacesContext context, AutoComplete ac, List items) throws IOException {
         boolean customContent = ac.getColums().size() > 0;
-        Converter converter = findConverter(context, ac);
+        Converter converter = ComponentUtils.getConverter(context, ac);
         
         if(customContent) {
             encodeSuggestionsAsTable(context, ac, items, converter);
@@ -564,7 +564,7 @@ public class AutoCompleteRenderer extends InputRenderer {
         }
         
         AutoComplete ac = (AutoComplete) component;
-		Converter converter = findConverter(context, component);
+		Converter converter = ComponentUtils.getConverter(context, component);
 
         if(ac.isMultiple()) {
             String[] values = (String[]) submittedValue;
