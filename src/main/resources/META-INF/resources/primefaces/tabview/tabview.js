@@ -73,6 +73,27 @@ PrimeFaces.widget.TabView = PrimeFaces.widget.BaseWidget.extend({
             });
     },
     
+    disableScrollerButton: function(btn) {
+        btn.addClass('ui-state-disabled').removeClass('ui-state-hover ui-state-active');
+    },
+            
+    enableScrollerButton: function(btn) {
+        btn.removeClass('ui-state-disabled');
+    },
+            
+    saveScrollState: function(value) {
+        this.scrollStateHolder.val(value);
+    },
+            
+    restoreScrollState: function() {
+        var value = parseInt(this.scrollStateHolder.val());
+        if(value === 0) {
+            this.disableScrollerButton(this.navcrollerLeft);
+        }
+        
+        this.navContainer.css('margin-left', this.scrollStateHolder.val() + 'px');
+    },
+             
     /**
      * Selects an inactive tab given index
      */

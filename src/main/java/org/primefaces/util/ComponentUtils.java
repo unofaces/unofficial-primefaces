@@ -211,12 +211,16 @@ public class ComponentUtils {
 		StringBuilder buffer = new StringBuilder();
 		
 		for(int i = 0; i < ids.length; i++) {
-			if(i != 0) {
-				buffer.append(" ");
-            }
-			
 			String id = ids[i].trim();
 			
+			if (isValueBlank(id)) {
+				continue;
+			}
+
+			if(i != 0 && buffer.length() > 0) {
+				buffer.append(" ");
+            }
+
 			if(id.equals("@all") || id.equals("@none")) {
 				buffer.append(id);
             }
@@ -252,7 +256,13 @@ public class ComponentUtils {
 			}
 		}
 		
-		return buffer.toString();
+		String clientIds = buffer.toString();
+
+		if (isValueBlank(clientIds)) {
+			return "@none";
+		}
+
+		return clientIds;
 	}
 	
 	public static String findComponentClientId(String id) {
