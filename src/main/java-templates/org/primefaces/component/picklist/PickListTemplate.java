@@ -95,7 +95,7 @@ import javax.faces.event.AjaxBehaviorEvent;
                 List transferredItems = new ArrayList();
                 this.populateModel(context, items, transferredItems);
                 TransferEvent transferEvent = new TransferEvent(this, behaviorEvent.getBehavior(), transferredItems, isAdd);
-                transferEvent.setPhaseId(transferEvent.getPhaseId());
+                transferEvent.setPhaseId(event.getPhaseId());
 
                 super.queueEvent(transferEvent);
             }
@@ -113,14 +113,16 @@ import javax.faces.event.AjaxBehaviorEvent;
 	public void populateModel(FacesContext context, String[] values, List model) {
 		Converter converter = this.getConverter();
 
-        for(String item : values) {            
-			if(item == null || item.trim().equals(""))
-				continue;
-			                    
-			Object convertedValue = converter != null ? converter.getAsObject(context, this, item) : item;
-			
-			if(convertedValue != null) {
-				model.add(convertedValue);
-            }
+		if (values != null) {
+	        for(String item : values) {            
+				if(item == null || item.trim().equals(""))
+					continue;
+				                    
+				Object convertedValue = converter != null ? converter.getAsObject(context, this, item) : item;
+				
+				if(convertedValue != null) {
+					model.add(convertedValue);
+	            }
+			}
 		}
 	}
