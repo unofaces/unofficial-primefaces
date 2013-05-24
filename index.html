@@ -1,110 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Unofficial PrimeFaces</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="binaries, sources of unreleased versions">
-    <meta name="author" content="">
+---
+layout: default
+title: Unofficial PrimeFaces
+prettify: true
+---
 
-    <!-- CSS -->
-    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/assets/css/site.css" rel="stylesheet">
-    <link href="/assets/css/bootstrap-responsive.min.css" rel="stylesheet">
-    <link href="/assets/css/google-code-prettify.css" rel="stylesheet">
+<div class="well well-small">
+  Build Status with CloudBees:
+  <a href="https://buildhive.cloudbees.com/job/primefaces/job/primefaces/">
+    <img src="https://buildhive.cloudbees.com/job/primefaces/job/primefaces/badge/icon"/>
+  </a>
+</div>
 
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="/assets/js/html5shiv.js"></script>
-    <![endif]-->
+<h3>Unofficial Releases</h3>
 
-    <script type="text/javascript">
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-39073912-1']);
-_gaq.push(['_trackPageview']);
+<p>Unofficial Maven Repository for non-publicly released PrimeFaces versions.</p>
 
-(function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
-    </script>
+<table class="table table-bordered table-hover">
+  <thead>
+    <tr>
+      <th>Version</th>
+      <th>Base</th>
+      <th>Binary</th>
+      <th>Sources</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for release in site.releases.unofficials %}
+    <tr>
+      <td>{{ release.version }}-UR</td>
+      <td><a href="{{ site.browse_source }}/primefaces/trunk?r={{ release.revision }}" title="{{ release.date_time | date_to_rfc822 }}">r{{ release.revision }}</a></td>
+      <td><a href="{{ site.repo_url }}/org/primefaces/primefaces/{{ release.version }}-UR/primefaces-{{ release.version }}-UR.jar">primefaces-{{ release.version }}-UR.jar</a>
+      <td><a href="{{ site.repo_url }}/org/primefaces/primefaces/{{ release.version }}-UR/primefaces-{{ release.version }}-UR-sources.jar">primefaces-{{ release.version }}-UR-sources.jar</a>
+      <td><a href="/changelog/{{ release.version }}.html">ChangeLog</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-  </head>
-
-  <body>
-
-    <div id="wrap">
-
-      <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="navbar-inner">
-          <div class="container">
-            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="brand" href="/">PrimeFaces <span class="label label-important">unofficial</span></a>
-          </div>
-        </div>
-      </div>
-
-      <div class="container">
-
-        <div class="well well-small">
-          Build Status with CloudBees:
-          <a href="https://buildhive.cloudbees.com/job/primefaces/job/primefaces/">
-            <img src="https://buildhive.cloudbees.com/job/primefaces/job/primefaces/badge/icon"/>
-          </a>
-        </div>
-
-        <h3>Unofficial Releases</h3>
-
-        <p>Unofficial Maven Repository for non-publicly released PrimeFaces versions.</p>
-
-        <table class="table table-bordered table-hover">
-          <thead>
-          <tr>
-            <th>Version</th>
-            <th>Base</th>
-            <th>Binary</th>
-            <th>Sources</th>
-            <th>Notes</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>3.5.4-UR</td>
-            <td><a href="http://code.google.com/p/primefaces/source/browse/primefaces/trunk?r=9175" title="2013-05-13 10:07:49 UTC">r9175</a></td>
-            <td><a href="http://primefaces.github.io/repository/org/primefaces/primefaces/3.5.4-UR/primefaces-3.5.4-UR.jar">primefaces-3.5.4-UR.jar</a>
-            <td><a href="http://primefaces.github.io/repository/org/primefaces/primefaces/3.5.4-UR/primefaces-3.5.4-UR-sources.jar">primefaces-3.5.4-UR-sources.jar</a>
-            <td><a href="/changelog/3.5.4.html">ChangeLog</a></td>
-          </tr>
-          <tr>
-            <td>3.5.3-UR</td>
-            <td><a href="http://code.google.com/p/primefaces/source/browse/primefaces/trunk?r=9003" title="2013-04-22 14:32:25 UTC">r9003</a></td>
-            <td><a href="http://primefaces.github.io/repository/org/primefaces/primefaces/3.5.3-UR/primefaces-3.5.3-UR.jar">primefaces-3.5.3-UR.jar</a>
-            <td><a href="http://primefaces.github.io/repository/org/primefaces/primefaces/3.5.3-UR/primefaces-3.5.3-UR-sources.jar">primefaces-3.5.3-UR-sources.jar</a>
-            <td><a href="/changelog/3.5.3.html">ChangeLog</a></td>
-          </tr>
-          <tr>
-            <td>3.5.2-UR</td>
-            <td><a href="http://code.google.com/p/primefaces/source/browse/primefaces/trunk?r=8865" title="2013-03-31 13:54:19 UTC">r8865</a></td>
-            <td><a href="http://primefaces.github.io/repository/org/primefaces/primefaces/3.5.2-UR/primefaces-3.5.2-UR.jar">primefaces-3.5.2-UR.jar</a>
-            <td><a href="http://primefaces.github.io/repository/org/primefaces/primefaces/3.5.2-UR/primefaces-3.5.2-UR-sources.jar">primefaces-3.5.2-UR-sources.jar</a>
-            <td><a href="/changelog/3.5.2.html">ChangeLog</a></td>
-          </tr>
-          <tr>
-            <td>3.5.1-UR</td>
-            <td><a href="http://code.google.com/p/primefaces/source/browse/primefaces/trunk?r=8807" title="2013-03-16 06:59:30 UTC">r8807</a></td>
-            <td><a href="http://primefaces.github.io/repository/org/primefaces/primefaces/3.5.1-UR/primefaces-3.5.1-UR.jar">primefaces-3.5.1-UR.jar</a>
-            <td><a href="http://primefaces.github.io/repository/org/primefaces/primefaces/3.5.1-UR/primefaces-3.5.1-UR-sources.jar">primefaces-3.5.1-UR-sources.jar</a>
-            <td><a href="/changelog/3.5.1.html">ChangeLog</a></td>
-          </tr>
-          </tbody>
-        </table>
-
-        <p>Downloading <strong>official</strong> and <strong>unofficial</strong> releases with Maven:</p>
+<p>Downloading <strong>official</strong> and <strong>unofficial</strong> releases with Maven:</p>
 
 <pre class="prettyprint lang-xml">
 &lt;repository&gt;
@@ -115,59 +49,28 @@ _gaq.push(['_trackPageview']);
 &lt;/repository&gt;
 </pre>
 
-        <p class="alert alert-danger">This unofficial repository <b>does not contain</b> artifacts for <b>themes</b>. Therefore, keep the official repository in your POM.</p>
+<p class="alert alert-danger">This unofficial repository <b>does not contain</b> artifacts for <b>themes</b>. Therefore, keep the official repository in your POM.</p>
 
-        <h3>Lastest Official Release</h3>
+<h3>Lastest Official Release</h3>
 
-        <table class="table table-bordered table-hover">
-          <thead>
-          <tr>
-            <th>Version</th>
-            <th>Binary</th>
-            <th>Sources</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>3.5</td>
-            <td><a href="http://primefaces.github.io/repository/org/primefaces/primefaces/3.5/primefaces-3.5.jar">primefaces-3.5.jar</a>
-            <td><a href="http://primefaces.github.io/repository/org/primefaces/primefaces/3.5/primefaces-3.5-sources.jar">primefaces-3.5-sources.jar</a>
-          </tr>
-          </tbody>
-        </table>
+<table class="table table-bordered table-hover">
+  <thead>
+    <tr>
+      <th>Version</th>
+      <th>Binary</th>
+      <th>Sources</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for release in site.releases.officials %}
+    <tr>
+      <td>{{ release.version }}</td>
+      <td><a href="{{ site.repo_url }}/org/primefaces/primefaces/{{ release.version }}/primefaces-{{ release.version }}.jar">primefaces-{{ release.version }}.jar</a>
+      <td><a href="{{ site.repo_url }}/org/primefaces/primefaces/{{ release.version }}/primefaces-{{ release.version }}-sources.jar">primefaces-{{ release.version }}-sources.jar</a>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-        <p>Or go to <a href="http://www.primefaces.org">Official Site</a> for download official releases.</p>
+<p>Or go to <a href="http://www.primefaces.org">Official Site</a> for download official releases.</p>
 
-      </div>
-
-      <div id="push"></div>
-    </div>
-
-    <div id="footer">
-      <div class="container">
-        <p class="muted credit">Unofficial Resources for <a href="http://www.primefaces.org">PrimeFaces</a>.</p>
-      </div>
-    </div>
-
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="/assets/js/jquery.min.js"></script>
-    <script src="/assets/js/bootstrap.min.js"></script>
-    <script src="/assets/js/google-code-prettify.js"></script>
-
-    <script type="text/javascript">
-!function ($) {
-
-  $(function(){
-
-    // make code pretty
-    window.prettyPrint && prettyPrint()
-
-  })
-
-}(window.jQuery)
-    </script>
-
-  </body>
-</html>

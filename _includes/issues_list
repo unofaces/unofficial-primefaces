@@ -1,0 +1,17 @@
+{% if issues_list %}
+<h4>
+  {{ issues_head }}
+  <small>({{ issues_list | size }})</small>
+</h4>
+
+<ul>
+{% for issue in issues_list %}
+  <li>
+    <a href="{{ site.issue_tracker }}{{ issue.num }}">Issue {{ issue.num }}</a>
+    {{ issue.txt }}
+  </li>
+{% endfor %}
+</ul>
+{% endif %}
+{% assign issues_head = nil %}
+{% assign issues_list = nil %}

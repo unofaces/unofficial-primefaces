@@ -1,0 +1,29 @@
+---
+layout:  default
+title:   Unofficial PrimeFaces
+---
+
+{% for r in site.releases.unofficials %}
+  {% if r.version == page.release %}
+    {% assign release = r %}
+  {% endif %}
+{% endfor %}
+
+<h3>{{ release.version }} ({{ release.date_time | date:"%Y-%m-%d" }}) <i>unofficial</i></h3>
+
+{{ content }}
+
+{% assign changelog = page.changelog %}
+
+{% assign issues_list = changelog.defects %}
+{% assign issues_head = 'Defects' %}
+{% include issues_list %}
+
+{% assign issues_list = changelog.enhancements %}
+{% assign issues_head = 'Enhancements' %}
+{% include issues_list %}
+
+{% assign issues_list = changelog.new_features %}
+{% assign issues_head = 'New Features' %}
+{% include issues_list %}
+

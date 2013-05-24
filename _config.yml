@@ -1,0 +1,31 @@
+name: PrimeFaces
+pygments: false
+
+repo_url: http://primefaces.github.io/repository
+browse_source: http://code.google.com/p/primefaces/source/browse
+issue_tracker: http://code.google.com/p/primefaces/issues/detail?id=
+
+analytics:
+  track_id: UA-39073912-1
+
+releases:
+  unofficials:
+  - version:   3.5.4
+    revision:  9175
+    date_time: 2013-05-13 10:07:49 -0000
+
+  - version:   3.5.3
+    revision:  9003
+    date_time: 2013-04-22 14:32:25 -0000
+
+  - version:   3.5.2
+    revision:  8865
+    date_time: 2013-03-31 13:54:19 -0000
+
+  - version:   3.5.1
+    revision:  8807
+    date_time: 2013-03-16 06:59:30 -0000
+
+  officials:
+  - version: 3.5
+
