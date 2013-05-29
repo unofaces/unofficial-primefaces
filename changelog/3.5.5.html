@@ -1,0 +1,53 @@
+---
+layout:  changelog
+release: 3.5.5
+changelog:
+  defects:
+   - num: 4181
+     txt: "SelectOneMenu widget's enable() method doesn't check to see if the component is already enabled."
+   - num: 4192
+     txt: "CommandButton doesn't handle null icon values properly"
+   - num: 4197
+     txt: "TabView should call pushComponentToEL() and popComponentFromEL() in processDecodes() method"
+   - num: 5177
+     txt: "<p:socket> ignores transport and fallbackTransport attributes"
+   - num: 5459
+     txt: "PickList queueEvent bug"
+   - num: 5635
+     txt: "onerror callback attribute called incorrectly from javascript"
+   - num: 5636
+     txt: "Dialog appendToBody & dynamic doesn't remove the old dom element"
+   - num: 5647
+     txt: "Dynamic Dialog - Infinite Loop"
+   - num: 5653
+     txt: "Chart title not escaped properly"
+   - num: 5655
+     txt: "ResetInputActionListener must be serializeable"
+   - num: 5663
+     txt: "PDF StreamedContent fails under the IE9 and IE10"
+   - num: 5665
+     txt: "Converters do not work with p:outputlabel"
+   - num: 5671
+     txt: "NullPointerException in PickList#populateModel"
+   - num: 5674
+     txt: "DataGrid event processing broken"
+   - num: 5676
+     txt: "Default Multi SortBy Index is not synced"
+   - num: 5677
+     txt: "Column level sortFunction is not getting called"
+   - num: 5681
+     txt: "IDs in dynamic column headers are not unique"
+
+  enhancements:
+   - num: 5648
+     txt: "Update to Atmosphere 1.0.13"
+   - num: 5662
+     txt: "DynamicContentId should be queueable to allow e.g. F5 on a streamed PDF"
+   - num: 5664
+     txt: "Do not use HttpSession for StreamedContent Streaming"
+
+  new_features:
+   - num: 5651
+     txt: "button should support target"
+---
+
