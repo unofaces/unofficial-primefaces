@@ -86,14 +86,10 @@ public class DataListRenderer extends DataRenderer {
             writer.endElement("div");
         } 
         else {
-            if(list.getType().equals("none")){
-                
+            if(list.getType().equals("none"))
                 encodeFreeList(context, list);
-            }
-            else{
-              
+            else
                 encodeStrictList(context, list); 
-            }
         }
 
         writer.endElement("div");
@@ -160,7 +156,6 @@ public class DataListRenderer extends DataRenderer {
                 requestMap.put(varStatus, new VarStatus(first, (pageSize - 1), (i == 0), (i == (rowCount - 1)), i, (i % 2 == 0), (i % 2 == 1), 1));
             }
             
-            
             list.setRowIndex(i);
 
             if(rowIndexVar != null) {
@@ -205,11 +200,18 @@ public class DataListRenderer extends DataRenderer {
     protected void encodeFreeList(FacesContext context, DataList list) throws IOException {
         int first = list.getFirst();
         int rows = list.getRows() == 0 ? list.getRowCount() : list.getRows();
+        int pageSize = first + rows;
+        int rowCount = list.getRowCount();
 
         String rowIndexVar = list.getRowIndexVar();
+        String varStatus = list.getVarStatus();
         Map<String,Object> requestMap = context.getExternalContext().getRequestMap();
 
-        for(int i = first; i < (first + rows); i++) {
+        for(int i = first; i < pageSize; i++) {
+            if(varStatus != null) {
+                requestMap.put(varStatus, new VarStatus(first, (pageSize - 1), (i == 0), (i == (rowCount - 1)), i, (i % 2 == 0), (i % 2 == 1), 1));
+            }
+            
             list.setRowIndex(i);
 
             if(rowIndexVar != null) {
@@ -226,6 +228,10 @@ public class DataListRenderer extends DataRenderer {
 
         if(rowIndexVar != null) {
             requestMap.remove(rowIndexVar);
+        }
+        
+        if(varStatus != null) {
+            requestMap.remove(varStatus);
         }
     }
     

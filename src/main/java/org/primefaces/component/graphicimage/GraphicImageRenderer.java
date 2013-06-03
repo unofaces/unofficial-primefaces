@@ -17,6 +17,7 @@ package org.primefaces.component.graphicimage;
 
 import java.io.IOException;
 import java.util.Map;
+import java.net.URLEncoder;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -42,8 +43,13 @@ public class GraphicImageRenderer extends CoreRenderer {
 		ResponseWriter writer = context.getResponseWriter();
 		GraphicImage image = (GraphicImage) component;
 		String clientId = image.getClientId(context);
-		String imageSrc = getImageSrc(context, image);
-		
+		String imageSrc;
+        try {
+            imageSrc = getImageSrc(context, image);
+        } catch (Exception ex) {
+            throw new IOException(ex);
+        }
+        
 		writer.startElement("img", image);
 		writer.writeAttribute("id", clientId, "id");
 		writer.writeAttribute("src", imageSrc, null);
@@ -56,7 +62,7 @@ public class GraphicImageRenderer extends CoreRenderer {
 		writer.endElement("img");
 	}
 	
-	protected String getImageSrc(FacesContext context, GraphicImage image) {
+	protected String getImageSrc(FacesContext context, GraphicImage image) throws Exception {
 		String src = null;
         String name = image.getName();
         
@@ -90,7 +96,7 @@ public class GraphicImageRenderer extends CoreRenderer {
                 String rid = createUniqueContentId(context);
                 StringBuilder builder = new StringBuilder(resourcePath);
 
-                builder.append("&").append(Constants.DYNAMIC_CONTENT_PARAM).append("=").append(rid);
+                builder.append("&").append(Constants.DYNAMIC_CONTENT_PARAM).append("=").append(URLEncoder.encode(rid, "UTF-8"));
 
                 for(UIComponent kid : image.getChildren()) {
                     if(kid instanceof UIParameter) {
@@ -105,9 +111,9 @@ public class GraphicImageRenderer extends CoreRenderer {
                 context.getExternalContext().getSessionMap().put(rid, image.getValueExpression("value").getExpressionString());
             }
 
-            if(!image.isCache()) {
+            if(src != null && !image.isCache()) {
                 src += src.contains("?") ? "&" : "?";
-                src += "primefaces_image=" + UUID.randomUUID().toString();
+                src += Constants.DYNAMIC_CONTENT_NOCACHE_PARAM + "=" + URLEncoder.encode(UUID.randomUUID().toString(), "UTF-8");
             }
             
             src = context.getExternalContext().encodeResourceURL(src);

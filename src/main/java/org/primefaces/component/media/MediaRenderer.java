@@ -16,6 +16,7 @@
 package org.primefaces.component.media;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.UUID;
 import javax.faces.application.Resource;
@@ -40,7 +41,12 @@ public class MediaRenderer extends CoreRenderer {
 		Media media = (Media) component;
 		MediaPlayer player = resolvePlayer(context, media);
 		ResponseWriter writer = context.getResponseWriter();
-		String src = getMediaSrc(context, media);
+		String src;
+        try {
+            src = getMediaSrc(context, media);
+        } catch (Exception ex) {
+           throw new IOException(ex);
+        }
         boolean isIE = AgentUtils.isIE(context);
         String sourceParam = player.getSourceParam();
 		
@@ -119,7 +125,7 @@ public class MediaRenderer extends CoreRenderer {
 		throw new IllegalArgumentException("Cannot resolve mediaplayer for media component '" + media.getClientId(context) + "', cannot play source:" + media.getValue());
 	}
 
-	protected String getMediaSrc(FacesContext context, Media media) {
+	protected String getMediaSrc(FacesContext context, Media media) throws Exception {
 		String src;
 		Object value = media.getValue();
         
@@ -154,6 +160,11 @@ public class MediaRenderer extends CoreRenderer {
                 if(src.startsWith("/")) {
                     src = context.getExternalContext().encodeResourceURL(src);
                 }
+            }
+            
+            if(!media.isCache()) {
+                src += src.contains("?") ? "&" : "?";
+                src += Constants.DYNAMIC_CONTENT_NOCACHE_PARAM + "=" + URLEncoder.encode(UUID.randomUUID().toString(), "UTF-8");
             }
         }
 

@@ -5139,7 +5139,7 @@ function Datepicker() {
 		disabled: false // The initial disabled state
 	};
 	$.extend(this._defaults, this.regional['']);
-	this.dpDiv = bindHover($('<div id="' + this._mainDivId + '" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div>'));
+	this.dpDiv = bindHover($('<div id="' + this._mainDivId + '" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-shadow ui-corner-all"></div>'));
 }
 
 $.extend(Datepicker.prototype, {
@@ -9231,8 +9231,6 @@ $.effects.transfer = function(o) {
 			} else {
 				this.$input.val(formattedDateTime);
 			}
-
-			this.$input.trigger("change");
 		},
 
 		_onFocus: function() {

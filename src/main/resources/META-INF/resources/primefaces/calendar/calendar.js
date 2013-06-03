@@ -52,7 +52,7 @@ PrimeFaces.widget.Calendar = PrimeFaces.widget.BaseWidget.extend({
 
         //image title
         this.cfg.buttonText = this.jqEl.attr('title') || '';
-        
+
         //Initialize calendar
         if(!this.cfg.disabled) {
             if(hasTimePicker) {

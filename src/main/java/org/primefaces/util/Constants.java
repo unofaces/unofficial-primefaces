@@ -42,4 +42,5 @@ public class Constants {
     public final static String PUSH_PATH = "/primepush";
     
     public static final String DYNAMIC_CONTENT_PARAM = "pfdrid";
+    public static final String DYNAMIC_CONTENT_NOCACHE_PARAM = "pfdrid_nc";
 }
