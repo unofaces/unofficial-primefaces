@@ -301,6 +301,7 @@ PrimeFaces.widget.BaseTree = PrimeFaces.widget.BaseWidget.extend({
         
         this.removeFromSelection(rowKey);
         
+        treeNode.find('> .ui-treenode-content > .ui-treenode-label').removeClass('ui-state-highlight');
         icon.removeClass('ui-icon ui-icon-check').addClass('ui-icon ui-icon-minus');
         treeNode.removeClass('ui-treenode-selected ui-treenode-unselected').addClass('ui-treenode-hasselected').attr('aria-checked', false).attr('aria-selected', false);
     },
@@ -404,8 +405,8 @@ PrimeFaces.widget.VerticalTree = PrimeFaces.widget.BaseTree.extend({
                         });
         }
         
-        $(document).off('mousedown.tree', nodeContentSelector)
-                        .on('mousedown.tree', nodeContentSelector, null, function(e) {
+        $(document).off('click.tree', nodeContentSelector)
+                        .on('click.tree', nodeContentSelector, null, function(e) {
                             $this.nodeClick(e, $(this));
                         });
     },
@@ -553,6 +554,7 @@ PrimeFaces.widget.VerticalTree = PrimeFaces.widget.BaseTree.extend({
             node = icon.closest('li');
 
             if(node.children('.ui-treenode-children').find('.ui-chkbox-icon.ui-icon-check').length > 0) {
+                node.addClass('ui-treenode-hasselected');
                 icon.addClass('ui-icon ui-icon-minus');
             }
         });
@@ -575,7 +577,7 @@ PrimeFaces.widget.VerticalTree = PrimeFaces.widget.BaseTree.extend({
             helper: function() {
                 var el = $('<div class="ui-tree-draghelper ui-state-highlight"></div>');
                 el.width($this.jq.width());
-                el.height($this.selections.length * 20);
+                el.height(20);
                 
                 return el;
             },
@@ -605,63 +607,60 @@ PrimeFaces.widget.VerticalTree = PrimeFaces.widget.BaseTree.extend({
                 dropPoint = $(this),
                 dropNode = dropPoint.closest('li.ui-treenode-parent'),
                 dropNodeKey = $this.getRowKey(dropNode),
-                dragNodes = dragSource.findNodes(dragSource.selections),
-                changedNodeKeys = [],
-                change = false,
+                dragNode = ui.draggable.closest('li.ui-treenode'),
+                targetDragNode = $this.findTargetDragNode(dragNode, dragMode),
+                dragNodeKey = $this.getRowKey(targetDragNode),
+                dragNodeContent = dragNode.children('span.ui-treenode-content'),
+                dragNodeLabel = dragNodeContent.children('span.ui-treenode-label'),
+                dragNodeDropPoint = targetDragNode.next('li.ui-tree-droppoint'),
+                oldParentNode = targetDragNode.parent().closest('li.ui-treenode-parent'),
                 transfer = (dragSource.id !== dropSource.id);
-        
+                
                 ui.helper.remove();
                 dropPoint.removeClass('ui-state-hover');
                 
-                for(var i = 0; i < dragNodes.length; i++) {
-                    var dragNode = dragNodes[i],
-                    targetDragNode = $this.findTargetDragNode(dragNode, dragMode),
-                    dragNodeContent = dragNode.children('span.ui-treenode-content'),
-                    dragNodeLabel = dragNodeContent.children('span.ui-treenode-label'),
-                    dragNodeDropPoint = targetDragNode.next('li.ui-tree-droppoint'),
-                    oldParentNode = targetDragNode.parent().closest('li.ui-treenode-parent'),
-                    validDrop = $this.validateDropPoint(dragNode, dropPoint);
+                var validDrop = $this.validateDropPoint(dragNode, dropPoint);
+                if(!validDrop) {
+                    return;
+                }
 
-                    if(!validDrop) {
-                        continue;
+                targetDragNode.hide().insertAfter(dropPoint);
+
+                if(transfer) {
+                    if(dragSource.isCheckboxSelection()) {
+                        dragSource.unselectSubtree(targetDragNode);
                     }
                     
-                    change = true;
-                    changedNodeKeys.push($this.getRowKey(targetDragNode));
-                    targetDragNode.hide().insertAfter(dropPoint);
+                    dragNodeLabel.removeClass('ui-state-highlight');
+                    dragNodeDropPoint.remove();
+                    $this.updateDragDropBindings(targetDragNode);
+                }
+                else {
+                    dragNodeDropPoint.insertAfter(targetDragNode);
+                }
 
-                    if(transfer) {
-                        dragNodeLabel.removeClass('ui-state-highlight');
-                        dragNodeDropPoint.remove();
-                        $this.updateDragDropBindings(targetDragNode);
-                    }
-                    else {
-                        dragNodeDropPoint.insertAfter(targetDragNode);
-                    }
-                    
-                    if(oldParentNode.length && (oldParentNode.find('> ul.ui-treenode-children > li.ui-treenode').length === 0)) {
-                        $this.makeLeaf(oldParentNode);
-                    }
+                if(oldParentNode.length && (oldParentNode.find('> ul.ui-treenode-children > li.ui-treenode').length === 0)) {
+                    $this.makeLeaf(oldParentNode);
+                }
 
-                    targetDragNode.fadeIn();
+                targetDragNode.fadeIn();
+                
+                if($this.isCheckboxSelection()) {                                                
+                    $this.syncDNDCheckboxes(dragSource, oldParentNode, dropNode);
                 }
                 
-                if(change) {
-                    $this.syncDragDrop({
-                        'dragSource': dragSource,
-                        'dropSource': dropSource,
-                        'dragNodes': dragNodes,
-                        'transfer': transfer
-                    });
-
-                    $this.fireDragDropEvent({
-                        'dragNodeKeys': changedNodeKeys,
-                        'dropNodeKey': dropNodeKey,
-                        'dragSource': dragSource.id,
-                        'dndIndex': dropPoint.prevAll('li.ui-treenode').length,
-                        'transfer': transfer
-                    });
+                $this.syncDragDrop();
+                if(transfer) {
+                    dragSource.syncDragDrop();
                 }
+                
+                $this.fireDragDropEvent({
+                    'dragNodeKey': dragNodeKey,
+                    'dropNodeKey': dropNodeKey,
+                    'dragSource': dragSource.id,
+                    'dndIndex': dropPoint.prevAll('li.ui-treenode').length,
+                    'transfer': transfer
+                });
             }
         });
     },
@@ -669,7 +668,7 @@ PrimeFaces.widget.VerticalTree = PrimeFaces.widget.BaseTree.extend({
     makeDropNodes: function(elements) {
         var $this = this,
         dragdropScope = this.cfg.dragdropScope||this.id;
-    
+        
         elements.droppable({
             accept: '.ui-treenode-content',
             tolerance: 'pointer',
@@ -687,83 +686,79 @@ PrimeFaces.widget.VerticalTree = PrimeFaces.widget.BaseTree.extend({
                 droppable = $(this),
                 dropNode = droppable.closest('li.ui-treenode'),
                 dropNodeKey = $this.getRowKey(dropNode),
-                dragNodes = dragSource.findNodes(dragSource.selections),
-                changedNodeKeys = [],
-                change = false,
-                transfer = (dragSource.id !== dropSource.id),
-                childrenContainer = dropNode.children('.ui-treenode-children');
-        
+                dragNode = ui.draggable.closest('li.ui-treenode'),
+                targetDragNode = $this.findTargetDragNode(dragNode, dragMode),
+                dragNodeKey = $this.getRowKey(targetDragNode),
+                dragNodeContent = dragNode.children('span.ui-treenode-content'),
+                dragNodeLabel = dragNodeContent.children('span.ui-treenode-label'),
+                dragNodeDropPoint = targetDragNode.next('li.ui-tree-droppoint'),
+                oldParentNode = targetDragNode.parent().closest('li.ui-treenode-parent'),
+                childrenContainer = dropNode.children('.ui-treenode-children'),
+                transfer = (dragSource.id !== dropSource.id);
+
                 ui.helper.remove();
                 droppable.children('.ui-treenode-label').removeClass('ui-state-hover');
-        
-                for(var i = 0; i < dragNodes.length; i++) {
-                    var dragNode = dragNodes[i],
-                    targetDragNode = $this.findTargetDragNode(dragNode, dragMode),
-                    dragNodeContent = dragNode.children('span.ui-treenode-content'),
-                    dragNodeLabel = dragNodeContent.children('span.ui-treenode-label'),
-                    dragNodeDropPoint = targetDragNode.next('li.ui-tree-droppoint'),
-                    oldParentNode = targetDragNode.parent().closest('li.ui-treenode-parent'),
-                    validDrop = $this.validateDropNode(dragNode, dropNode, oldParentNode); 
-                    
-                    if(!validDrop) {
-                        continue;
-                    }
-                    
-                    if(childrenContainer.children('li.ui-treenode').length === 0) {
-                        $this.makeParent(dropNode);
-                    }
-                    
-                    change = true;
-                    changedNodeKeys.push($this.getRowKey(targetDragNode));
-                    targetDragNode.hide();
-                    
-                    childrenContainer.append(targetDragNode);
-
-                    if(oldParentNode.length && (oldParentNode.find('> ul.ui-treenode-children > li.ui-treenode').length === 0)) {
-                        $this.makeLeaf(oldParentNode);
-                    }
-
-                    if(transfer) {
-                        dragNodeLabel.removeClass('ui-state-highlight');
-                        dragNodeDropPoint.remove();
-                        $this.updateDragDropBindings(targetDragNode);
-                    }
-                    else {
-                        childrenContainer.append(dragNodeDropPoint);
-                    }
-                    
-                    targetDragNode.fadeIn();
+                
+                var validDrop = $this.validateDropNode(dragNode, dropNode, oldParentNode);  
+                if(!validDrop) {
+                    return;
                 }
                 
-               if(change) {
-                    $this.syncDragDrop({
-                        'dragSource': dragSource,
-                        'dropSource': dropSource,
-                        'dragNodes': dragNodes,
-                        'transfer': transfer
-                    });
-
-                    $this.fireDragDropEvent({
-                        'dragNodeKeys': changedNodeKeys,
-                        'dropNodeKey': dropNodeKey,
-                        'dragSource': dragSource.id,
-                        'dndIndex': 0,
-                        'transfer': transfer
-                    });
+                if(childrenContainer.children('li.ui-treenode').length === 0) {
+                    $this.makeParent(dropNode);
                 }
+
+                targetDragNode.hide();
+                childrenContainer.append(targetDragNode);
+
+                if(oldParentNode.length && (oldParentNode.find('> ul.ui-treenode-children > li.ui-treenode').length === 0)) {
+                    $this.makeLeaf(oldParentNode);
+                }
+
+                if(transfer) {
+                    if(dragSource.isCheckboxSelection()) {
+                        dragSource.unselectSubtree(targetDragNode);
+                    }
+                    
+                    dragNodeLabel.removeClass('ui-state-highlight');
+                    dragNodeDropPoint.remove();
+                    $this.updateDragDropBindings(targetDragNode);
+                }
+                else {
+                    childrenContainer.append(dragNodeDropPoint);
+                }
+
+                targetDragNode.fadeIn();
+                
+                if($this.isCheckboxSelection()) {                                                
+                    $this.syncDNDCheckboxes(dragSource, oldParentNode, dropNode);
+                }
+                
+                $this.syncDragDrop();
+                if(transfer) {
+                    dragSource.syncDragDrop();
+                }
+
+                $this.fireDragDropEvent({
+                    'dragNodeKey': dragNodeKey,
+                    'dropNodeKey': dropNodeKey,
+                    'dragSource': dragSource.id,
+                    'dndIndex': 0,
+                    'transfer': transfer
+                });
             }
         });
     },
     
     updateDragDropBindings: function(node) {
+        //self droppoint
+        node.after('<li class="ui-tree-droppoint ui-droppable"></li>');
+        this.makeDropPoints(node.next('li.ui-tree-droppoint'));
+        
         //descendant droppoints
         var subtreeDropPoints = node.find('li.ui-tree-droppoint');
         subtreeDropPoints.droppable('destroy');
         this.makeDropPoints(subtreeDropPoints);
-        
-        //self droppoint
-        node.after('<li class="ui-tree-droppoint ui-droppable"></li>');
-        this.makeDropPoints(node.next('li.ui-tree-droppoint'));
 
         //descendant drop node contents
         var subtreeDropNodeContents = node.find('span.ui-treenode-content');
@@ -802,7 +797,7 @@ PrimeFaces.widget.VerticalTree = PrimeFaces.widget.BaseTree.extend({
         
         return nodes;
     },
-    
+            
     updateRowKeys: function() {
         var children = this.jq.find('> ul.ui-tree-container > li.ui-treenode');
         this.updateChildrenRowKeys(children, null);
@@ -837,6 +832,13 @@ PrimeFaces.widget.VerticalTree = PrimeFaces.widget.BaseTree.extend({
         if(dragNode.has(dropPoint.get(0)).length) {
             return false;
         }
+        
+        //drop restriction
+        if(this.cfg.dropRestrict) {
+            if(this.cfg.dropRestrict === 'sibling' && dragNode.parent().get(0) !== dropPoint.parent().get(0)) {
+                return false;
+            }
+        }
        
         return true;
     },
@@ -868,34 +870,64 @@ PrimeFaces.widget.VerticalTree = PrimeFaces.widget.BaseTree.extend({
         this.makeDropPoints(node.find('> ul.ui-treenode-children > li.ui-tree-droppoint'));
     },
             
-    syncDragDrop: function(event) {
-        var selectedNodes,
-        dragSource = event.dragSource,
-        dropSource = event.dropSource;
-                    
-        if(event.transfer) {
-            dragSource.updateRowKeys();
-            dragSource.selections = [];
-            dragSource.writeSelections();
-
-            if(dropSource.cfg.draggable)
-                selectedNodes = dropSource.findNodes(dropSource.selections);
+    syncDragDrop: function() {
+        var $this = this;
+        
+        if(this.cfg.selectionMode) {
+            var selectedNodes = this.findNodes(this.selections);
+            
+            this.updateRowKeys();
+            this.selections = [];
+            $.each(selectedNodes, function(i, item) {
+                $this.selections.push(item.attr('data-rowkey'));
+            });
+            this.writeSelections();
         }
         else {
-            selectedNodes = event.dragNodes;
+            this.updateRowKeys();
         }
-
-        dropSource.updateRowKeys();
+    },
         
-        if(dropSource.cfg.draggable) {
-            dropSource.selections = [];
-            $.each(selectedNodes, function(i, item) {
-                dropSource.selections.push(item.attr('data-rowkey'));
-            });
-            dropSource.writeSelections();
+    syncDNDCheckboxes: function(dragSource, oldParentNode, newParentNode) {
+        if(oldParentNode.length) {
+            dragSource.propagateDNDCheckbox(oldParentNode);
+        }
+        
+        if(newParentNode.length) {
+            this.propagateDNDCheckbox(newParentNode);
         }
     },
             
+    unselectSubtree: function(node) {
+        var $this = this,
+        checkbox = node.find('> .ui-treenode-content > .ui-chkbox');
+
+        this.toggleCheckboxState(checkbox, true);
+        
+        node.children('.ui-treenode-children').find('.ui-chkbox').each(function() {
+            $this.toggleCheckboxState($(this), true);
+        });
+    },
+            
+    propagateDNDCheckbox: function(node) {
+        var checkbox = node.find('> .ui-treenode-content > .ui-chkbox'),
+        children = node.find('> .ui-treenode-children > .ui-treenode');
+
+        if(children.length) {
+            if(children.filter('.ui-treenode-unselected').length === children.length)
+                this.uncheck(checkbox);
+            else if(children.filter('.ui-treenode-selected').length === children.length)
+                this.check(checkbox);
+            else
+                this.partialCheck(checkbox);
+        }
+        
+        var parent = node.parent().closest('.ui-treenode-parent');
+        if(parent.length) {
+            this.propagateDNDCheckbox(parent);
+        }
+    },
+                        
     fireDragDropEvent: function(event) {
         var $this = this,
         options = {
@@ -905,7 +937,7 @@ PrimeFaces.widget.VerticalTree = PrimeFaces.widget.BaseTree.extend({
 
         options.params = [
             {name: this.id + '_dragdrop', value: true},
-            {name: this.id + '_dragNode', value: event.dragNodeKeys.join(',')},
+            {name: this.id + '_dragNode', value: event.dragNodeKey},
             {name: this.id + '_dragSource', value: event.dragSource},
             {name: this.id + '_dropNode', value: event.dropNodeKey},
             {name: this.id + '_dndIndex', value: event.dndIndex},
