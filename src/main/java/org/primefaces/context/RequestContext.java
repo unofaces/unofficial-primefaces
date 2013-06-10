@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import javax.faces.context.FacesContext;
+
 import org.primefaces.util.Constants;
 import org.primefaces.util.WidgetBuilder;
 
@@ -103,6 +104,11 @@ public abstract class RequestContext {
     public abstract WidgetBuilder getWidgetBuilder();
     
     public abstract Map<Object,Object> getAttributes();
+
+    public abstract void openDialog(String outcome);
     
-    public abstract void returnFromDialog(Object data);
+    public abstract void openDialog(String outcome, Map<String,Object> options, Map<String,List<String>> params);
+    
+    public abstract void closeDialog(Object data);
+
 }

@@ -27,10 +27,9 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.component.visit.VisitCallback;
 import javax.faces.component.visit.VisitContext;
 import javax.faces.component.visit.VisitHint;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
-import javax.faces.context.FacesContext;
+import org.primefaces.util.Constants;
 import org.primefaces.util.WidgetBuilder;
 import org.primefaces.visit.ResetInputVisitCallback;
 
@@ -123,33 +122,37 @@ public class DefaultRequestContext extends RequestContext {
         
         reset(list);
     }
-
-    @Override
-    public void returnFromDialog(Object data) {
-        FacesContext context = FacesContext.getCurrentInstance();
-        Map<String,Object> session = context.getExternalContext().getSessionMap();
-        Map<String,String> params = context.getExternalContext().getRequestParameterMap();
-        String dcid = params.get("dcid");
-        session.put(dcid, data);
-
-        this.execute("PrimeFaces.hideDialog({dcid:'" + dcid + "'});");
-    }
     
     @Override
-    public void release() {
-        attributes = null;
-        widgetBuilder = null;;
-        context = null;
-        config = null;
-    	
-    	setCurrentInstance(null);
+    public void openDialog(String outcome) {
+        this.getAttributes().put("dialog.outcome", outcome);
+    }
+        
+    @Override
+    public void openDialog(String outcome, Map<String,Object> options, Map<String,List<String>> params) {
+        this.getAttributes().put(Constants.DIALOG_OUTCOME, outcome);
+        
+        if(options != null)
+            this.getAttributes().put(Constants.DIALOG_OPTIONS, options);
+        
+        if(options != null)
+            this.getAttributes().put(Constants.DIALOG_PARAMS, params);
     }
 
-	@Override
-	public ConfigContainer getConfig() {
-		return config;
-	}
+    @Override
+    public void closeDialog(Object data) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        Map<String,String> params = context.getExternalContext().getRequestParameterMap();
+        String pfdlgcid = params.get(Constants.DIALOG_CONVERSATION_PARAM);
+            
+        if(data != null) {
+            Map<String,Object> session = context.getExternalContext().getSessionMap();            
+            session.put(pfdlgcid, data);
+        }
 
+        this.execute("PrimeFaces.closeDialog({pfdlgcid:'" + pfdlgcid + "'});");
+    }
+    
     @Override
     public Map<Object, Object> getAttributes() {
         if(attributes.get(ATTRIBUTES_KEY) == null) {
