@@ -15,11 +15,14 @@
  */
 package org.primefaces.util;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
+
+import org.primefaces.context.RequestContext;
 
 /**
  * Helper to generate javascript code of an ajax call
@@ -215,6 +218,8 @@ public class AjaxRequestBuilder {
     }
       
     public String build() {
+        addFragmentConfig();
+        
         buffer.append("});");
         
         if(preventDefault) {
@@ -228,6 +233,8 @@ public class AjaxRequestBuilder {
     }
     
     public String buildBehavior() {
+        addFragmentConfig();
+        
         buffer.append("}, arguments[1]);");
         
         if(preventDefault) {
@@ -238,5 +245,16 @@ public class AjaxRequestBuilder {
         buffer.setLength(0);
         
         return request;
+    }
+    
+    private void addFragmentConfig() {
+        Map<Object,Object> attrs = RequestContext.getCurrentInstance().getAttributes();
+        Object fragmentId = attrs.get(Constants.FRAGMENT_ID);
+        if(fragmentId != null) {
+            buffer.append(",fragmentId:'").append(fragmentId).append("'");
+            
+            if(attrs.containsKey(Constants.FRAGMENT_AUTO_RENDERED))
+                buffer.append(",fragmentUpdate:true");
+        }
     }
 }

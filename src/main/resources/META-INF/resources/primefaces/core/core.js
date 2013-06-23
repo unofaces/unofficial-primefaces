@@ -452,6 +452,32 @@
                 }
             }
         },
+                
+        showMessageInDialog: function(msg) {
+            if(!this.messageDialog) {
+                var messageDialogDOM = $('<div id="primefacesmessagedlg" class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-shadow ui-overlay-hidden"/>')
+                            .append('<div class="ui-dialog-titlebar ui-widget-header ui-helper-clearfix ui-corner-top"><span class="ui-dialog-title"></span>' +
+                            '<a class="ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all" href="#" role="button"><span class="ui-icon ui-icon-closethick"></span></a></div>' + 
+                            '<div class="ui-dialog-content ui-widget-content" style="height: auto;"><p></p></div>')
+                            .appendTo(document.body);
+
+                PrimeFaces.cw('Dialog', 'primefacesmessagedialog', {
+                    id: 'primefacesmessagedlg', 
+                    modal:true, 
+                    draggable: false, 
+                    resizable: false,
+                    showEffect: 'fade',
+                    hideEffect: 'fade'
+                });
+                this.messageDialog = window['primefacesmessagedialog'];
+                this.messageDialog.titleContainer = this.messageDialog.titlebar.children('span.ui-dialog-title');
+                this.messageDialog.detailContainer = this.messageDialog.content.children('p');
+            }
+
+            this.messageDialog.titleContainer.text(msg.summary);
+            this.messageDialog.detailContainer.html('').append('<span class="ui-dialog-message ui-messages-' + msg.severity.split(' ')[0].toLowerCase() + '-icon" />').append(msg.detail);
+            this.messageDialog.show();
+        },
 
         locales : {},
 
@@ -515,7 +541,9 @@
                 PrimeFaces.ajax.AjaxUtils.updateState.call(this, content);
             }
             else if(id == PrimeFaces.VIEW_ROOT) {
+            	$.ajaxSetup({'cache' : true});
                 $('head').html(content.substring(content.indexOf("<head>") + 6, content.lastIndexOf("</head>")));
+                $.ajaxSetup({'cache' : false});
                 $('body').html(content.substring(content.indexOf("<body>") + 6, content.lastIndexOf("</body>")));
             }
             else {
@@ -654,8 +682,11 @@
             });
 
             //process
-            var processArray = PrimeFaces.ajax.AjaxUtils.idsToArray(cfg, 'process', cfg.processSelector),
-            processIds = processArray.length > 0 ? processArray.join(' ') : '@all';
+            var processArray = PrimeFaces.ajax.AjaxUtils.idsToArray(cfg, 'process', cfg.processSelector);
+            if(cfg.fragmentId) {
+                processArray.push(cfg.fragmentId);
+            }
+            var processIds = processArray.length > 0 ? processArray.join(' ') : '@all';
             postParams.push({
                 name:PrimeFaces.PARTIAL_PROCESS_PARAM, 
                 value:processIds
@@ -663,6 +694,9 @@
 
             //update
             var updateArray = PrimeFaces.ajax.AjaxUtils.idsToArray(cfg, 'update', cfg.updateSelector);
+            if(cfg.fragmentId&&cfg.fragmentUpdate) {
+                updateArray.push(cfg.fragmentId);
+            }
             if(updateArray.length > 0) {
                 postParams.push({
                     name:PrimeFaces.PARTIAL_UPDATE_PARAM, 

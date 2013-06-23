@@ -18,6 +18,7 @@ package org.primefaces.context;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 import org.primefaces.util.Constants;
@@ -127,5 +128,11 @@ public abstract class RequestContext {
      * @param data Optional data to pass back to a dialogReturn event.
      */
     public abstract void closeDialog(Object data);
+    
+    /**
+     * Displays a message in a dialog.
+     * @param message FacesMessage to be displayed.
+     */
+    public abstract void showMessageInDialog(FacesMessage message);
 
 }
