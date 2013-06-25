@@ -1483,8 +1483,15 @@ PrimeFaces.widget.SelectListbox = PrimeFaces.widget.BaseWidget.extend({
             if(!item.hasClass('ui-state-highlight')) {
                 item.addClass('ui-state-hover');
             }
-        }).on('mouseout.selectListbox', function() {
+        })
+        .on('mouseout.selectListbox', function() {
             $(this).removeClass('ui-state-hover');
+        })
+        .on('dblclick.selectListbox', function(e) {       
+            $this.input.trigger('dblclick');
+            
+            PrimeFaces.clearSelection();
+            e.preventDefault();
         });
         
         //input
@@ -1492,7 +1499,7 @@ PrimeFaces.widget.SelectListbox = PrimeFaces.widget.BaseWidget.extend({
             $this.jq.addClass('ui-state-focus');
         }).on('blur.selectListbox', function() {
             $this.jq.removeClass('ui-state-focus');
-        })
+        });
     },
     
     unselectAll: function() {
@@ -1521,11 +1528,20 @@ PrimeFaces.widget.SelectOneListbox = PrimeFaces.widget.SelectListbox.extend({
         var $this = this;
         
         this.items.on('click.selectListbox', function(e) {       
-            var item = $(this);
+            var item = $(this),
+            selectedItem = $this.items.filter('.ui-state-highlight');
             
-            $this.unselectAll();
-            $this.selectItem(item);
-            $this.input.change();
+            if(item.index() !== selectedItem.index()) {
+                if(selectedItem.length) {
+                    $this.unselectItem(selectedItem);
+                }
+                
+                $this.selectItem(item);
+                $this.input.change();
+            }
+            
+            $this.input.trigger('click');
+            
             PrimeFaces.clearSelection();
             e.preventDefault();
         });
@@ -1549,8 +1565,10 @@ PrimeFaces.widget.SelectManyMenu = PrimeFaces.widget.SelectListbox.extend({
             }
             
             var item = $(this),
-            metaKey = (e.metaKey||e.ctrlKey);
-            
+            selectedItems = $this.items.filter('.ui-state-highlight'),
+            metaKey = (e.metaKey||e.ctrlKey),
+            unchanged = (!metaKey && selectedItems.length === 1 && selectedItems.index() === item.index());
+
             if(!e.shiftKey) {
                 if(!metaKey) {
                     $this.unselectAll();
@@ -1583,8 +1601,12 @@ PrimeFaces.widget.SelectManyMenu = PrimeFaces.widget.SelectListbox.extend({
                     $this.cursorItem = item;
                 }
             }
+            
+            if(!unchanged) {
+                $this.input.trigger('change');
+            }
 
-            $this.input.change();
+            $this.input.trigger('click');
             PrimeFaces.clearSelection();
             e.preventDefault();
         });
@@ -1610,7 +1632,7 @@ PrimeFaces.widget.SelectManyMenu = PrimeFaces.widget.SelectListbox.extend({
                 else
                     $this.selectItem(item);
                 
-                $this.input.change();
+                $this.input.trigger('change');
             });
         }
     },
