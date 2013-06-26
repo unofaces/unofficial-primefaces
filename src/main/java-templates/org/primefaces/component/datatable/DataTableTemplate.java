@@ -805,15 +805,6 @@ import org.primefaces.component.datatable.feature.*;
         this.multiSortMeta = value;
     }
     
-    public boolean isDefaultSorted() {
-        Object value = getStateHelper().get("defaultSorted");
-
-        return value == null ? false : true;
-	}
-	public void setDefaultSorted() {
-		getStateHelper().put("defaultSorted", true);
-	}
-    
     public boolean isRTL() {
         return this.getDir().equalsIgnoreCase("rtl");
     }
@@ -843,5 +834,38 @@ import org.primefaces.component.datatable.feature.*;
     }
     public Columns getDynamicColumns() {
         return dynamicColumns;
+    }
+    
+    @Override
+    protected void processChildrenFacets(FacesContext context, PhaseId phaseId) {        
+        for(UIComponent child : this.getChildren()) {
+            if(child.isRendered() && (child.getFacetCount() > 0)) {
+                if(child instanceof Column) {
+                    for(UIComponent facet : child.getFacets().values()) {
+                        process(context, facet, phaseId);
+                    }
+                } 
+                else if(child instanceof Columns) {
+                    Columns uicolumns = (Columns) child;
+                    int f = uicolumns.getFirst();
+                    int r = uicolumns.getRows();
+                    int l = (r == 0) ? uicolumns.getRowCount() : (f + r);
+                            
+                    for(int i = f; i < l; i++) {
+                        uicolumns.setRowIndex(i);
+                        
+                        if(!uicolumns.isRowAvailable()) {
+                            break;
+                        }
+                        
+                        for(UIComponent facet : child.getFacets().values()) {
+                            process(context, facet, phaseId);
+                        }
+                    }
+                    
+                    uicolumns.setRowIndex(-1);
+                }
+            }
+        }
     }
     

@@ -255,7 +255,7 @@ public class UIData extends javax.faces.component.UIData {
         popComponentFromEL(context);
     }
     
-    protected void processPhase(FacesContext context, PhaseId phaseId) {
+    protected void processPhase(FacesContext context, PhaseId phaseId) {        
         setRowIndex(-1);
         processFacets(context, phaseId);
         processChildrenFacets(context, phaseId);
