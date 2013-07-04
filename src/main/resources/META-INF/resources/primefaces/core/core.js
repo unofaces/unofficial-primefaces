@@ -998,7 +998,7 @@
         init: function(cfg) {
             this.cfg = cfg;
             this.id = cfg.id;
-            this.jqId = PrimeFaces.escapeClientId(this.id),
+            this.jqId = PrimeFaces.escapeClientId(this.id);
             this.jq = $(this.jqId);
 
             //remove script tag
