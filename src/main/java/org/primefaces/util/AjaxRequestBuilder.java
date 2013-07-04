@@ -144,6 +144,20 @@ public class AjaxRequestBuilder {
         return this;
     }
     
+    public AjaxRequestBuilder resetValues(boolean value, boolean resetValuesSet) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        String resetValuesParam = context.getExternalContext().getInitParameter(Constants.RESET_VALUES_PARAM);
+    	
+    	//component can override global setting
+        boolean resetValues = resetValuesSet ? value : Boolean.valueOf(resetValuesParam);
+        
+        if(resetValues) {
+            buffer.append(",resetValues:true");
+        }
+        
+        return this;
+    }
+    
     public AjaxRequestBuilder onstart(String onstart) {
         if(onstart != null) {
             buffer.append(",onstart:function(cfg){").append(onstart).append(";}");

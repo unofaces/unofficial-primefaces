@@ -58,6 +58,7 @@ public class AjaxBehaviorHandler extends TagHandler implements BehaviorHolderAtt
     private final TagAttribute global;
     private final TagAttribute async;
     private final TagAttribute partialSubmit;
+    private final TagAttribute resetValues;
     
     public AjaxBehaviorHandler(BehaviorConfig config) {
         super(config);
@@ -74,6 +75,7 @@ public class AjaxBehaviorHandler extends TagHandler implements BehaviorHolderAtt
         this.global = this.getAttribute("global");
         this.async = this.getAttribute("async");
         this.partialSubmit = this.getAttribute("partialSubmit");
+        this.resetValues = this.getAttribute("resetValues");
     }
     
     public void apply(FaceletContext ctx, UIComponent parent) throws IOException {
@@ -192,6 +194,7 @@ public class AjaxBehaviorHandler extends TagHandler implements BehaviorHolderAtt
         setBehaviorAttribute(ctx, behavior, this.async, Boolean.class);
         setBehaviorAttribute(ctx, behavior, this.partialSubmit, Boolean.class);
         setBehaviorAttribute(ctx, behavior, this.listener, MethodExpression.class);
+        setBehaviorAttribute(ctx, behavior, this.resetValues, Boolean.class);
         
         if(listener != null) {
             behavior.addAjaxBehaviorListener(new AjaxBehaviorListenerImpl(
@@ -213,7 +216,7 @@ public class AjaxBehaviorHandler extends TagHandler implements BehaviorHolderAtt
     }
     
     private void setBehaviorAttribute(FaceletContext ctx, AjaxBehavior behavior, TagAttribute attr, Class type) {
-        if(attr != null) {
+    	if(attr != null) {
             behavior.setValueExpression(attr.getLocalName(), attr.getValueExpression(ctx, type));
         }    
     }
