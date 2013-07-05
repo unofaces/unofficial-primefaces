@@ -17,6 +17,7 @@ package org.primefaces.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -26,6 +27,7 @@ import javax.el.ValueExpression;
 import javax.faces.FacesException;
 import javax.faces.component.*;
 import javax.faces.component.visit.VisitContext;
+import javax.faces.component.visit.VisitHint;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -38,6 +40,8 @@ import org.primefaces.visit.ResetInputVisitCallback;
 
 public class ComponentUtils {
 
+	public static final EnumSet<VisitHint> VISIT_HINTS_SKIP_UNRENDERED = EnumSet.of(VisitHint.SKIP_UNRENDERED);
+	
 	/**
 	 * Visit the current renderIds and, if the component is 
      * an instance of {@link EditableValueHolder}, 
@@ -47,9 +51,12 @@ public class ComponentUtils {
 	 * @param context The current {@link FacesContext}.
 	 */
     public static void resetValuesFromComponentsToRender(FacesContext context) {
-    	context.getViewRoot().visitTree(
-        		VisitContext.createVisitContext(context, context.getPartialViewContext().getRenderIds(), null), 
-                new ResetInputVisitCallback());
+        VisitContext visitContext = VisitContext.createVisitContext(context, null, VISIT_HINTS_SKIP_UNRENDERED);
+        
+        for (String renderId : context.getPartialViewContext().getRenderIds()) {
+            UIComponent renderComponent = context.getViewRoot().findComponent(renderId);
+            renderComponent.visitTree(visitContext, ResetInputVisitCallback.INSTANCE);
+        }
     }
 
 	/**
