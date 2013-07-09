@@ -123,20 +123,21 @@ public class ConfirmDialogRenderer extends CoreRenderer {
         
         writer.startElement("div", null);
         writer.writeAttribute("class", Dialog.CONTENT_CLASS, null);
-          
-        writer.startElement("p", null);
         
 		//severity
 		writer.startElement("span", null);
 		writer.writeAttribute("class", severityIcon, null);
 		writer.endElement("span");
 
+        writer.startElement("span", null);
+		writer.writeAttribute("class", ConfirmDialog.MESSAGE_CLASS, null);
+        
         if(messageFacet != null)
             messageFacet.encodeAll(context);
         else if(messageText != null)
 			writer.writeText(messageText, null);
         
-        writer.endElement("p");
+        writer.endElement("span");
         
         writer.endElement("div");
     }

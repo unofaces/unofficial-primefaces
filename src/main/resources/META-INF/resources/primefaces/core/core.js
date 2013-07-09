@@ -422,10 +422,10 @@
                 }
                 
                 if(titleElement.length > 0) {
-                    window[dialogWidgetVar].titlebar.children('span.ui-dialog-title').html(titleElement.text());
+                    PF(dialogWidgetVar).titlebar.children('span.ui-dialog-title').html(titleElement.text());
                 }
                 
-                window[dialogWidgetVar].show();
+                PF(dialogWidgetVar).show();
                 
                 dialogFrame.data('initialized', true);
             })
@@ -436,7 +436,7 @@
             var dlg = $(parent.document.body).children('div.ui-dialog').filter(function() {
                 return $(this).data('pfdlgcid') === cfg.pfdlgcid;
             }),
-            dlgWidget = parent[dlg.data('widgetvar')],
+            dlgWidget = parent.PF(dlg.data('widgetvar')),
             sourceWidget = dlgWidget.cfg.sourceWidget;
 
             dlgWidget.hide();
@@ -459,34 +459,33 @@
                 
         showMessageInDialog: function(msg) {
             if(!this.messageDialog) {
-                var messageDialogDOM = $('<div id="primefacesmessagedlg" class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-shadow ui-overlay-hidden"/>')
+                var messageDialogDOM = $('<div id="primefacesmessagedlg" class="ui-message-dialog ui-dialog ui-widget ui-widget-content ui-corner-all ui-shadow ui-overlay-hidden"/>')
                             .append('<div class="ui-dialog-titlebar ui-widget-header ui-helper-clearfix ui-corner-top"><span class="ui-dialog-title"></span>' +
                             '<a class="ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all" href="#" role="button"><span class="ui-icon ui-icon-closethick"></span></a></div>' + 
-                            '<div class="ui-dialog-content ui-widget-content" style="height: auto;"><p></p></div>')
+                            '<div class="ui-dialog-content ui-widget-content" style="height: auto;"></div>')
                             .appendTo(document.body);
 
                 PrimeFaces.cw('Dialog', 'primefacesmessagedialog', {
                     id: 'primefacesmessagedlg', 
-                    modal:true, 
+                    modal:true,
                     draggable: false, 
                     resizable: false,
                     showEffect: 'fade',
                     hideEffect: 'fade'
                 });
-                this.messageDialog = window['primefacesmessagedialog'];
+                this.messageDialog = PF('primefacesmessagedialog');
                 this.messageDialog.titleContainer = this.messageDialog.titlebar.children('span.ui-dialog-title');
-                this.messageDialog.detailContainer = this.messageDialog.content.children('p');
             }
 
             this.messageDialog.titleContainer.text(msg.summary);
-            this.messageDialog.detailContainer.html('').append('<span class="ui-dialog-message ui-messages-' + msg.severity.split(' ')[0].toLowerCase() + '-icon" />').append(msg.detail);
+            this.messageDialog.content.html('').append('<span class="ui-dialog-message ui-messages-' + msg.severity.split(' ')[0].toLowerCase() + '-icon" />').append(msg.detail);
             this.messageDialog.show();
         },
                 
-        confirm: function(element) {
+        confirm: function(msg) {
             if(PrimeFaces.confirmDialog) {
-                PrimeFaces.confirmSource = element;
-                PrimeFaces.confirmDialog.show();
+                PrimeFaces.confirmSource = $(PrimeFaces.escapeClientId(msg.source));
+                PrimeFaces.confirmDialog.showMessage(msg);
             }
             else {
                 PrimeFaces.warn('No global confirmation dialog available.');
