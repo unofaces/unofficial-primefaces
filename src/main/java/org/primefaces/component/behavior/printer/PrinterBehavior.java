@@ -25,6 +25,7 @@ import javax.faces.context.FacesContext;
 
 @ResourceDependencies({
 	@ResourceDependency(library="primefaces", name="jquery/jquery.js"),
+	@ResourceDependency(library="primefaces", name="jquery/jquery-plugins.js"),
 	@ResourceDependency(library="primefaces", name="printer/printer.js"),
     @ResourceDependency(library="primefaces", name="primefaces.js")
 })

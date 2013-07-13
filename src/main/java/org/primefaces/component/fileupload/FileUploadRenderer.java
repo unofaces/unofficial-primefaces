@@ -54,7 +54,7 @@ public class FileUploadRenderer extends CoreRenderer {
     }
 	
 	public void decodeSimple(FacesContext context, FileUpload fileUpload, FileItem file) {
-		if(file.getName().equals(""))
+		if(file == null || file.getName().equals(""))
             fileUpload.setSubmittedValue("");
         else
             fileUpload.setSubmittedValue(new DefaultUploadedFile(file));
@@ -114,18 +114,21 @@ public class FileUploadRenderer extends CoreRenderer {
             String update = fileUpload.getUpdate();
             String process = fileUpload.getProcess();
             
-            wb.attr("autoUpload", fileUpload.isAuto())
-                .attr("dnd", fileUpload.isDragDropSupport())
+            wb.attr("auto", fileUpload.isAuto(), false)
+                .attr("dnd", fileUpload.isDragDropSupport(), true)
                 .attr("update", ComponentUtils.findClientIds(context, fileUpload, update), null)
                 .attr("process", ComponentUtils.findClientIds(context, fileUpload, process), null)
-                .attr("maxFileSize", fileUpload.getSizeLimit(), Integer.MAX_VALUE)
+                .attr("maxFileSize", fileUpload.getSizeLimit(), Long.MAX_VALUE)
                 .attr("fileLimit", fileUpload.getFileLimit(), Integer.MAX_VALUE)
                 .attr("invalidFileMessage", fileUpload.getInvalidFileMessage(), null)
                 .attr("invalidSizeMessage", fileUpload.getInvalidSizeMessage(), null)
                 .attr("fileLimitMessage", fileUpload.getFileLimitMessage(), null)
                 .attr("merge", fileUpload.isMerge(), false)
                 .attr("messageTemplate", fileUpload.getMessageTemplate(), null)
+                .attr("previewWidth", fileUpload.getPreviewWidth(), 48)
+                .attr("previewHeight", fileUpload.getPreviewHeight(), Integer.MAX_VALUE)
                 .callback("onstart", "function()", fileUpload.getOnstart())
+                .callback("onerror", "function()", fileUpload.getOnerror())
                 .callback("oncomplete", "function()", fileUpload.getOncomplete());
             
             if(fileUpload.getAllowTypes() != null) {
@@ -196,7 +199,7 @@ public class FileUploadRenderer extends CoreRenderer {
         ResponseWriter writer = context.getResponseWriter();
         String clientId = fileUpload.getClientId(context);
         
-        writer.startElement("label", null);
+        writer.startElement("span", null);
         writer.writeAttribute("class", HTML.BUTTON_TEXT_ICON_LEFT_BUTTON_CLASS + " " + FileUpload.CHOOSE_BUTTON_CLASS, null);
         
         //button icon 
@@ -212,7 +215,7 @@ public class FileUploadRenderer extends CoreRenderer {
 
         encodeInputField(context, fileUpload, clientId + "_input");
         
-		writer.endElement("label");
+		writer.endElement("span");
     }
 
     protected void encodeInputField(FacesContext context, FileUpload fileUpload, String clientId) throws IOException {

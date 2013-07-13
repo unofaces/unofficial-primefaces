@@ -770,15 +770,13 @@
             * Only add params of process components and their children 
             * if partial submit is enabled and there are components to process partially
             */
-            if(cfg.partialSubmit && processIds != '@all') {
-                var hasViewstate = false;
+            if(cfg.partialSubmit && processIds.indexOf('@all') == -1) {
+            	var hasViewstate = false;
 
-                if(processIds != '@none') {
-                    var processIdsArray = processIds.split(' ');
-
-                    $.each(processIdsArray, function(i, item) {
-                        var jqProcess = $(PrimeFaces.escapeClientId(item)),
-                        componentPostParams = null;
+                if(processIds.indexOf('@none') == -1) {
+                	for (var i = 0; i < processArray.length; i++) {
+                        var jqProcess = $(PrimeFaces.escapeClientId(processArray[i]));
+                        var componentPostParams = null;
 
                         if(jqProcess.is('form')) {
                             componentPostParams = jqProcess.serializeArray();
@@ -792,7 +790,7 @@
                         }
 
                         $.merge(postParams, componentPostParams);
-                    });
+                    }
                 }
 
                 //add viewstate if necessary
