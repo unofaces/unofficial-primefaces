@@ -210,7 +210,7 @@ public class AjaxBehaviorHandler extends TagHandler implements BehaviorHolderAtt
     }
 
     public void applyAttachedObject(FacesContext context, UIComponent parent) {
-        FaceletContext ctx = (FaceletContext) context.getAttributes().get(FaceletContext.FACELET_CONTEXT_KEY);
+        FaceletContext ctx = getFaceletContext(context);
         
         applyAttachedObject(ctx, parent, getEventName());
     }
@@ -238,5 +238,14 @@ public class AjaxBehaviorHandler extends TagHandler implements BehaviorHolderAtt
             }
         }
         return result;
+    }
+    
+    private FaceletContext getFaceletContext(FacesContext context) {
+        FaceletContext faceletContext = (FaceletContext) context.getAttributes().get(FaceletContext.FACELET_CONTEXT_KEY);
+        if(faceletContext == null) {
+            faceletContext = (FaceletContext) context.getAttributes().get("com.sun.faces.facelets.FACELET_CONTEXT");
+        }
+        
+        return faceletContext;
     }
 }
