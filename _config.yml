@@ -10,6 +10,10 @@ analytics:
 
 releases:
   unofficials:
+  - version:   3.5.9
+    revision:  9636
+    date_time: 2013-07-22 12:11:20 -0000
+
   - version:   3.5.8
     revision:  9429
     date_time: 2013-07-01 12:23:10 -0000
