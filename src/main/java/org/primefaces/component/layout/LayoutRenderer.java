@@ -101,7 +101,7 @@ public class LayoutRenderer extends CoreRenderer {
                         .attr("spacing_closed", unit.getCollapseSize());
                 }
                 
-                wb.attr("initHidden", unit.isVisible(), true)
+                wb.attr("initHidden", !unit.isVisible(), false)
                     .attr("initClosed", unit.isCollapsed(), false)
                     .attr("fxName", unit.getEffect(), null)
                     .attr("fxSpeed", unit.getEffectSpeed(), null)
