@@ -35,7 +35,7 @@ public class OutputPanelRenderer extends CoreRenderer {
         }
         else {
             encodeMarkup(context, panel);
-            if(panel.isDynamic()) {
+            if(panel.isDeferred()) {
                 encodeScript(context, panel);
             }
         }
@@ -54,7 +54,7 @@ public class OutputPanelRenderer extends CoreRenderer {
 		if(style != null) 
             writer.writeAttribute("style", panel.getStyle(), "style");
 		
-        if(panel.isDynamic())
+        if(panel.isDeferred())
             renderLoading(context, panel);
         else
             renderChildren(context, panel);
@@ -67,6 +67,10 @@ public class OutputPanelRenderer extends CoreRenderer {
         String clientId = panel.getClientId(context);
         WidgetBuilder wb = getWidgetBuilder(context);
         wb.widget("OutputPanel", panel.resolveWidgetVar(), clientId, true);
+        
+        if(panel.isDeferred()) {
+            wb.attr("deferred", true).attr("deferredMode", panel.getDeferredMode());
+        }
         
         startScript(writer, clientId);
         writer.write(wb.build());
