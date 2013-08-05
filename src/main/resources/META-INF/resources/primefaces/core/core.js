@@ -226,10 +226,10 @@
 
         createWidget : function(widgetConstructor, widgetVar, cfg, resource) {            
             if(PrimeFaces.widget[widgetConstructor]) {
-                if(PrimeFaces.widgets[widgetVar])
-                    PrimeFaces.widgets[widgetVar].refresh(cfg);                                                    //ajax spdate
+                if(window[widgetVar])
+                    window[widgetVar].refresh(cfg);                                     //ajax spdate
                 else
-                    PrimeFaces.widgets[widgetVar] = new PrimeFaces.widget[widgetConstructor](cfg);  //page init
+                    window[widgetVar] = new PrimeFaces.widget[widgetConstructor](cfg);  //page init
             }
             else {
                 var scriptURI = $('script[src*="/javax.faces.resource/primefaces.js"]').attr('src').replace('primefaces.js', resource + '/' + resource + '.js'),
@@ -242,7 +242,7 @@
                 //load script and initialize widget
                 PrimeFaces.getScript(location.protocol + '//' + location.host + scriptURI, function() {
                     setTimeout(function() {
-                        PrimeFaces.widgets[widgetVar] = new PrimeFaces.widget[widgetConstructor](cfg);
+                        window[widgetVar] = new PrimeFaces.widget[widgetConstructor](cfg);
                     }, 100);
                 });
             }
@@ -522,11 +522,6 @@
      */
     PrimeFaces.ajax = {};
     PrimeFaces.widget = {};
-    PrimeFaces.widgets = {};
-    
-    PF = function(widgetVar) {
-        return PrimeFaces.widgets[widgetVar];
-    };
 
     PrimeFaces.ajax.AjaxUtils = {
 
