@@ -7,7 +7,9 @@
 <ul>
 {% for issue in issues_list %}
   <li>
+    {% if issue.num > 0 %}
     <a href="{{ site.issue_tracker }}{{ issue.num }}">Issue {{ issue.num }}</a>
+    {% endif %}
     {{ issue.txt }}
   </li>
 {% endfor %}
