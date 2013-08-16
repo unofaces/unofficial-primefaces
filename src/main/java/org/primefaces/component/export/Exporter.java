@@ -17,11 +17,9 @@ package org.primefaces.component.export;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.el.MethodExpression;
-import javax.el.ValueExpression;
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIColumn;
 import javax.faces.component.UIComponent;
@@ -119,25 +117,17 @@ public abstract class Exporter {
 			Object value = valueHolder.getValue();
 			if(value == null)
 				return "";
-
-			//first ask the converter
-			if(valueHolder.getConverter() != null) {
-				return valueHolder.getConverter().getAsString(context, component, value);
-			}
-			//Try to guess
-			else {
-				ValueExpression expr = component.getValueExpression("value");
-				if(expr != null) {
-					Class<?> valueType = expr.getType(context.getELContext());
-					if(valueType != null) {
-						Converter converterForType = context.getApplication().createConverter(valueType);
-
-						if(converterForType != null)
-							return converterForType.getAsString(context, component, value);
-					}
-				}
-			}
-
+			
+            Converter converter = valueHolder.getConverter();
+            if(converter == null) {
+                Class valueType = value.getClass();
+                converter = context.getApplication().createConverter(valueType);
+            }
+            
+            if(converter != null) {
+                return converter.getAsString(context, component, value);
+            }
+			
 			//No converter found just return the value as string
 			return value.toString();
 		} 

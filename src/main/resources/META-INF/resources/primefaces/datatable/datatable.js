@@ -999,7 +999,8 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
     
     selectRowsInRange: function(row) {
         var rows = this.tbody.children(),
-        _self = this;
+        rowMeta = this.getRowMeta(row);
+        $this = this;
        
         //unselect previously selected rows with shift
         if(this.cursorIndex) {
@@ -1007,7 +1008,7 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
             rowsToUnselect = oldCursorIndex > this.originRowIndex ? rows.slice(this.originRowIndex, oldCursorIndex + 1) : rows.slice(oldCursorIndex, this.originRowIndex + 1);
 
             rowsToUnselect.each(function(i, item) {
-                _self.unselectRow($(item), true);
+                $this.unselectRow($(item), true);
             });
         }
 
@@ -1017,8 +1018,10 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
         var rowsToSelect = this.cursorIndex > this.originRowIndex ? rows.slice(this.originRowIndex, this.cursorIndex + 1) : rows.slice(this.cursorIndex, this.originRowIndex + 1);
 
         rowsToSelect.each(function(i, item) {
-            _self.selectRow($(item), true);
+            $this.selectRow($(item), true);
         });
+        
+        this.fireRowSelectEvent(rowMeta.key, 'rowSelect');
     },
     
     selectRow: function(r, silent) {
@@ -1263,21 +1266,20 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
     toggleExpansion: function(toggler) {
         var row = toggler.closest('tr'),
         rowIndex = this.getRowMeta(row).index,
-        expanded = row.hasClass('ui-expanded-row'),
+        expanded = toggler.hasClass('ui-icon-circle-triangle-s'),
         $this = this;
 
         //Run toggle expansion if row is not being toggled already to prevent conflicts
-        if($.inArray(rowIndex, this.expansionProcess) == -1) {
+        if($.inArray(rowIndex, this.expansionProcess) === -1) {
             if(expanded) {
                 this.expansionProcess.push(rowIndex);
-                toggler.removeClass('ui-icon-circle-triangle-s');
-                row.removeClass('ui-expanded-row');
+                toggler.addClass('ui-icon-circle-triangle-e').removeClass('ui-icon-circle-triangle-s');
 
                 row.next().fadeOut(function() {
                     $(this).remove();
 
                     $this.expansionProcess = $.grep($this.expansionProcess, function(r) {
-                        return r != rowIndex;
+                        return (r !== rowIndex);
                     });
                 });
                 
@@ -1285,8 +1287,7 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
             }
             else {
                 this.expansionProcess.push(rowIndex);
-                toggler.addClass('ui-icon-circle-triangle-s');
-                row.addClass('ui-expanded-row');
+                toggler.addClass('ui-icon-circle-triangle-s').removeClass('ui-icon-circle-triangle-e');
 
                 this.loadExpandedRowContent(row);
             }
