@@ -74,8 +74,8 @@ public class TooltipRenderer extends CoreRenderer {
             .attr("hideEvent", tooltip.getHideEvent(), null)
             .attr("showEffect", tooltip.getShowEffect(), null)
             .attr("hideEffect", tooltip.getHideEffect(), null)
-            .attr("global", tooltip.isGlobal())
-            .attr("target", target, null);
+            .attr("target", target, null)
+            .attr("globalSelector", tooltip.getGlobalSelector(), null);
 		
         startScript(writer, clientId);
 		writer.write(wb.build());
