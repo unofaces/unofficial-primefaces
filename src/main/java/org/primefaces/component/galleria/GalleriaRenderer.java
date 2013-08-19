@@ -107,7 +107,7 @@ public class GalleriaRenderer extends CoreRenderer {
         Galleria galleria = (Galleria) component;
         String clientId = galleria.getClientId(context);
         WidgetBuilder wb = getWidgetBuilder(context);
-        wb.widget("Galleria", galleria.resolveWidgetVar(), clientId, "galleria", false);
+        wb.widget("Galleria", galleria.resolveWidgetVar(), clientId, "galleria", !context.isPostback());
         
         wb.attr("showFilmstrip", galleria.isShowFilmstrip(), true)
                 .attr("frameWidth", galleria.getFrameWidth(), 60)
