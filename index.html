@@ -15,10 +15,15 @@ prettify: true
 
 <p>Unofficial Maven Repository for non-publicly released PrimeFaces versions.</p>
 
+<h4>Warnings</h4>
+
 <div class="alert alert-danger">
-  <h4>Warning!</h4>
   In the <strong>3.5.9-UR</strong> and <strong>3.5.10-UR</strong> releases the feature <a href="{{ site.issue_tracker }}5850">5850</a> ended up coming down from upstream version.
   See the <a href="/widgetvar-workaround.html">workaround</a> if you are using one of them.
+</div>
+
+<div class="alert alert-danger">
+  From <strong>3.5.8-UR</strong> releases has one bug in <code>AjaxBehaviour.saveState</code>. In the <strong>3.5.13-UR2</strong> release has fixed.
 </div>
 
 <table class="table table-bordered table-hover">
@@ -33,11 +38,12 @@ prettify: true
   </thead>
   <tbody>
     {% for release in site.releases.unofficials %}
+      {% capture full_version %}{{ release.version }}-{{ release.suffix }}{% endcapture %}
     <tr>
-      <td>{{ release.version }}-UR</td>
+      <td>{{ release.version }}-{{ release.suffix }}</td>
       <td><a href="{{ site.browse_source }}/primefaces/trunk?r={{ release.revision }}" title="{{ release.date_time | date_to_rfc822 }}">r{{ release.revision }}</a></td>
-      <td><a href="{{ site.repo_url }}/org/primefaces/primefaces/{{ release.version }}-UR/primefaces-{{ release.version }}-UR.jar">primefaces-{{ release.version }}-UR.jar</a>
-      <td><a href="{{ site.repo_url }}/org/primefaces/primefaces/{{ release.version }}-UR/primefaces-{{ release.version }}-UR-sources.jar">primefaces-{{ release.version }}-UR-sources.jar</a>
+      <td><a href="{{ site.repo_url }}/org/primefaces/primefaces/{{ full_version }}/primefaces-{{ full_version }}.jar">primefaces-{{ full_version }}.jar</a>
+      <td><a href="{{ site.repo_url }}/org/primefaces/primefaces/{{ full_version }}/primefaces-{{ full_version }}-sources.jar">primefaces-{{ full_version }}-sources.jar</a>
       <td><a href="/changelog/{{ release.version }}.html">ChangeLog</a></td>
     </tr>
     {% endfor %}
