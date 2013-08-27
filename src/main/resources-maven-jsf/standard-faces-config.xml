@@ -14,29 +14,29 @@
     <application>
         <resource-handler>org.primefaces.application.PrimeResourceHandler</resource-handler>
         <system-event-listener>
-            <source-class>javax.faces.application.Application</source-class>
-            <system-event-class>javax.faces.event.PostConstructApplicationEvent</system-event-class>
             <system-event-listener-class>org.primefaces.webapp.PostConstructApplicationEventListener</system-event-listener-class>
+            <system-event-class>javax.faces.event.PostConstructApplicationEvent</system-event-class>
+            <source-class>javax.faces.application.Application</source-class>
         </system-event-listener>
         <system-event-listener>
+            <system-event-listener-class>org.primefaces.event.AutoUpdateComponentListener</system-event-listener-class>
+            <system-event-class>javax.faces.event.PostAddToViewEvent</system-event-class>
             <source-class>org.primefaces.component.messages.Messages</source-class>
-            <system-event-class>javax.faces.event.PostAddToViewEvent</system-event-class>
-            <system-event-listener-class>org.primefaces.event.AutoUpdateComponentListener</system-event-listener-class>
         </system-event-listener>
         <system-event-listener>
-            <source-class>org.primefaces.component.growl.Growl</source-class>
-            <system-event-class>javax.faces.event.PostAddToViewEvent</system-event-class>
             <system-event-listener-class>org.primefaces.event.AutoUpdateComponentListener</system-event-listener-class>
+            <system-event-class>javax.faces.event.PostAddToViewEvent</system-event-class>         
+            <source-class>org.primefaces.component.growl.Growl</source-class>               
         </system-event-listener>
         <system-event-listener>
+            <system-event-listener-class>org.primefaces.event.AutoUpdateComponentListener</system-event-listener-class>
+            <system-event-class>javax.faces.event.PostAddToViewEvent</system-event-class>
             <source-class>org.primefaces.component.outputpanel.OutputPanel</source-class>
-            <system-event-class>javax.faces.event.PostAddToViewEvent</system-event-class>
-            <system-event-listener-class>org.primefaces.event.AutoUpdateComponentListener</system-event-listener-class>
         </system-event-listener>
         <system-event-listener>
-            <source-class>org.primefaces.component.columns.Columns</source-class>
-            <system-event-class>javax.faces.event.PostAddToViewEvent</system-event-class>
             <system-event-listener-class>org.primefaces.event.system.DynamicColumnsListener</system-event-listener-class>
+            <system-event-class>javax.faces.event.PostAddToViewEvent</system-event-class>
+            <source-class>org.primefaces.component.columns.Columns</source-class>
         </system-event-listener>
     </application>
     
