@@ -151,6 +151,9 @@ PrimeFaces.widget.TieredMenu = PrimeFaces.widget.Menu.extend({
             
             var activeSibling = menuitem.siblings('.ui-menuitem-active');
             if(activeSibling.length == 1) {
+                activeSibling.find('li.ui-menuitem-active').each(function() {
+                    _self.deactivate($(this));
+                });
                 _self.deactivate(activeSibling);
             }
             
