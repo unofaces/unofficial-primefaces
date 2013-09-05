@@ -1910,7 +1910,7 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
         return meta;
     },
     
-    setupDraggableColumns : function() {
+    setupDraggableColumns: function() {
         this.orderStateHolder = $(this.jqId + '_columnOrder');
         this.saveColumnOrder();
         
@@ -1983,7 +1983,6 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
 
                 return helper.get(0);
             }
-
         }).droppable({
             hoverClass:'ui-state-highlight',
             tolerance:'pointer',
@@ -2013,8 +2012,6 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
                     draggedCells.each(function(i, item) {
                         $(this).insertAfter(droppedCells.eq(i));
                     });
-                    
-                    
                 }
                 //drop left
                 else {
@@ -2024,11 +2021,17 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
                         $(this).insertBefore(droppedCells.eq(i));
                     });
                 }
+                
+                //align widths
+                if($this.cfg.scrollable) {
+                    $this.columnWidthsFixed = false;
+                    $this.fixColumnWidths();
+                }
                
                 //save order
                 $this.saveColumnOrder();
 
-                //fire toggleCheckAll event
+                //fire colReorder event
                 if($this.cfg.behaviors) {
                     var columnReorderBehavior = $this.cfg.behaviors['colReorder'];
 
