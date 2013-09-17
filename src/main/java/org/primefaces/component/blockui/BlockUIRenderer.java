@@ -48,6 +48,7 @@ public class BlockUIRenderer extends CoreRenderer {
         wb.attr("block", block.getClientId(context));
         wb.attr("triggers", triggers, null);
         wb.attr("blocked", blockUI.isBlocked(), false);
+        wb.attr("animate", blockUI.isAnimate(), true);
         
         startScript(writer, null);
         writer.write(wb.build());
