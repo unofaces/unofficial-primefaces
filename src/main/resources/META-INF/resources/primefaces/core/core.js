@@ -1028,8 +1028,16 @@
         //returns jquery object representing the main dom element related to the widget
         getJQ: function(){
             return this.jq;
-        }
+        },
 
+    	/**
+    	 * Removes the widget's script block from the DOM.
+    	 *
+    	 * @param {string} clientId The id of the widget.
+    	 */
+        removeScriptElement: function(clientId) {
+        	$(PrimeFaces.escapeClientId(clientId) + '_s').remove();
+        }
     });
     
     //expose globally

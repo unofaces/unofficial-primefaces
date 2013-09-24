@@ -185,6 +185,17 @@ public abstract class UITree extends UIComponentBase implements NamingContainer 
         }
     }
     
+    public void populateRowKeys(TreeNode node, List<String> keys) {
+        int childCount = node.getChildCount();
+        if(childCount > 0) {
+            for(int i = 0; i < childCount; i++) {
+                TreeNode childNode = node.getChildren().get(i);
+                keys.add(childNode.getRowKey());
+                populateRowKeys(childNode, keys);
+            }
+        }
+    }
+        
     public void initPreselection() {
         if(preselection != null) {
             ValueExpression ve = this.getValueExpression("selection");
@@ -305,6 +316,12 @@ public abstract class UITree extends UIComponentBase implements NamingContainer 
         
         processNodes(context, PhaseId.UPDATE_MODEL_VALUES);
         
+        updateSelection(context);
+        
+        popComponentFromEL(context);
+	}
+    
+    public void updateSelection(FacesContext context) {
         String selectionMode = this.getSelectionMode();
         ValueExpression selectionVE = this.getValueExpression("selection");
 
@@ -336,9 +353,7 @@ public abstract class UITree extends UIComponentBase implements NamingContainer 
 			selectionVE.setValue(context.getELContext(), selection);
 			setSelection(null);
 		}
-        
-        popComponentFromEL(context);
-	}
+    }
     
     protected void processNodes(FacesContext context, PhaseId phaseId) {
               

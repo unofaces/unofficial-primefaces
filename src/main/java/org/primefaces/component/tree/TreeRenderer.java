@@ -16,7 +16,9 @@
 package org.primefaces.component.tree;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.component.UIComponent;
@@ -24,6 +26,7 @@ import javax.faces.component.UINamingContainer;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import org.primefaces.component.api.UITree;
+import org.primefaces.context.RequestContext;
 
 import org.primefaces.model.TreeNode;
 import org.primefaces.renderkit.CoreRenderer;
@@ -88,6 +91,27 @@ public class TreeRenderer extends CoreRenderer {
 
             tree.setRowKey(null);
         }
+        
+        if(tree.isCheckboxSelection() && tree.isDynamic() && tree.isSelectionRequest(context)) {
+            String selectedNodeRowKey = params.get(clientId + "_instantSelection");
+            tree.setRowKey(selectedNodeRowKey);
+            TreeNode selectedNode = tree.getRowNode();
+            List<String> descendantRowKeys = new ArrayList<String>();
+            tree.populateRowKeys(selectedNode, descendantRowKeys);
+            int size = descendantRowKeys.size();
+            StringBuilder sb = new StringBuilder();
+            
+            for(int i = 0; i < size; i++) {
+                sb.append(descendantRowKeys.get(i));
+                if(i != (size - 1)) {
+                    sb.append(",");
+                }
+            }
+            
+            RequestContext.getCurrentInstance().addCallbackParam("descendantRowKeys", sb.toString());
+            sb.setLength(0);
+            descendantRowKeys = null;
+        }
     }
     
     public void decodeDragDrop(FacesContext context, Tree tree) {        
@@ -120,8 +144,6 @@ public class TreeRenderer extends CoreRenderer {
         
         tree.setDragNode(dragNode);
         tree.setDropNode(dropNode);
-        
-        dragNode.setParent(dropNode);
         
         if(dndIndex >= 0 && dndIndex < dropNode.getChildCount())
             dropNode.getChildren().add(dndIndex, dragNode);
@@ -226,27 +248,31 @@ public class TreeRenderer extends CoreRenderer {
 	
 	protected void encodeMarkup(FacesContext context, Tree tree) throws IOException {
 		boolean vertical = tree.getOrientation().equals("vertical");
+        TreeNode root = (TreeNode) tree.getValue();
+        
+        if(root != null && root.getRowKey() == null) {
+            root.setRowKey("root");
+            tree.buildRowKeys(root);
+            tree.initPreselection();
+        }
 		
-        if(vertical) {
-            encodeVerticalTree(context, tree);
-        }
-        else {
-            encodeHorizontalTree(context, tree);
-        }
+        if(vertical)
+            encodeVerticalTree(context, tree, root);
+        else
+            encodeHorizontalTree(context, tree, root);
 	}
     
-    public void encodeVerticalTree(FacesContext context, Tree tree) throws IOException {
+    public void encodeVerticalTree(FacesContext context, Tree tree, TreeNode root) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
         String clientId = tree.getClientId(context);
-        TreeNode root = (TreeNode) tree.getValue();
         boolean dynamic = tree.isDynamic();
         String selectionMode = tree.getSelectionMode();
         boolean selectable = selectionMode != null;
         boolean multiselectable = selectable && selectionMode.equals("single");
         boolean checkbox = selectable && selectionMode.equals("checkbox");
         boolean droppable = tree.isDroppable();
-        
-        if(root.getRowKey() == null) {
+                
+        if(root != null && root.getRowKey() == null) {
             root.setRowKey("root");
             tree.buildRowKeys(root);
             tree.initPreselection();
@@ -288,10 +314,9 @@ public class TreeRenderer extends CoreRenderer {
 		writer.endElement("div");
     }
     
-    protected void encodeHorizontalTree(FacesContext context, Tree tree) throws IOException {
+    protected void encodeHorizontalTree(FacesContext context, Tree tree, TreeNode root) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
         String clientId = tree.getClientId(context);
-        TreeNode root = (TreeNode) tree.getValue();
         boolean dynamic = tree.isDynamic();
         String selectionMode = tree.getSelectionMode();
         boolean checkbox = (selectionMode != null) && selectionMode.equals("checkbox");
@@ -307,7 +332,7 @@ public class TreeRenderer extends CoreRenderer {
             encodeHorizontalTreeNode(context, tree, root, clientId, null, NodeOrder.NONE, dynamic, checkbox);
         }
         
-        if(tree.getSelectionMode() != null) {
+        if(selectionMode != null) {
             encodeSelectionHolder(context, tree);
         }
                
@@ -321,12 +346,7 @@ public class TreeRenderer extends CoreRenderer {
         boolean leaf = node.isLeaf();
         boolean selectable = node.isSelectable();
         boolean partialSelected = node.isPartialSelected();
-
-        //preselection
         boolean selected = node.isSelected();
-        /*if(selected) {
-            tree.getSelectedRowKeys().add(rowKey);
-        }*/
         
         String nodeClass;
         if(leaf) {

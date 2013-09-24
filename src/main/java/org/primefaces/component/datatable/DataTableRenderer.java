@@ -18,6 +18,7 @@ package org.primefaces.component.datatable;
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
+import javax.el.ELContext;
 import javax.el.MethodExpression;
 import javax.el.ValueExpression;
 import javax.faces.FacesException;
@@ -631,7 +632,6 @@ public class DataTableRenderer extends DataRenderer {
         String emptyMessage = table.getEmptyMessage();
         UIComponent emptyFacet = table.getFacet("emptyMessage");
         SubTable subTable = table.getSubTable();
-        SummaryRow summaryRow = table.getSummaryRow();
                 
         if(table.isSelectionEnabled()) {
             table.findSelectedRowKeys();
@@ -650,24 +650,10 @@ public class DataTableRenderer extends DataRenderer {
         }
 
         if(hasData) {
-            for(int i = first; i < (first + rowCountToRender); i++) {
-                if(subTable != null) {
-                    encodeSubTable(context, table, subTable, i, rowIndexVar);
-                }
-                else {
-                    table.setRowIndex(i);
-                    if(!table.isRowAvailable()) {
-                        break;
-                    }
-                    
-                    encodeRow(context, table, clientId, i, rowIndexVar);
-                    
-                    if(summaryRow != null && !isInSameGroup(context, table, i)) {
-                        table.setRowIndex(i);   //restore
-                        encodeSummaryRow(context, table, summaryRow);
-                    }
-                }
-            }
+            if(subTable != null)
+                encodeSubTable(context, table, subTable, first, (first + rowCountToRender));
+            else
+                encodeRows(context, table, first, (first + rowCountToRender));
         }
         else {
             //Empty message
@@ -698,6 +684,29 @@ public class DataTableRenderer extends DataRenderer {
 		}
     }
     
+    protected void encodeRows(FacesContext context, DataTable table, int first, int last) throws IOException {
+        String clientId = table.getClientId(context);
+        SummaryRow summaryRow = table.getSummaryRow();
+        ELContext eLContext = context.getELContext();
+        ValueExpression groupByVe = table.getSortBy() == null ? null : context.getApplication().getExpressionFactory().createValueExpression(
+                        eLContext, "#{" + table.getVar() + "." + table.getSortBy() + "}", Object.class);
+        boolean encodeSummaryRow = (summaryRow != null && groupByVe != null);
+        
+        for(int i = first; i < last; i++) {
+            table.setRowIndex(i);
+            if(!table.isRowAvailable()) {
+                break;
+            }
+
+            encodeRow(context, table, clientId, i);
+
+            if(encodeSummaryRow && !isInSameGroup(context, table, i, groupByVe, eLContext)) {
+                table.setRowIndex(i);
+                encodeSummaryRow(context, table, summaryRow);
+            }
+        }
+    }
+        
     protected void encodeFrozenRows(FacesContext context, DataTable table) throws IOException {
         Collection<?> frozenRows = table.getFrozenRows();
         if(frozenRows == null || frozenRows.isEmpty()) {
@@ -707,7 +716,6 @@ public class DataTableRenderer extends DataRenderer {
         ResponseWriter writer = context.getResponseWriter();
         String clientId = table.getClientId(context);
         String var = table.getVar();
-        String rowIndexVar = table.getRowIndexVar();
         Map<String,Object> requestMap = context.getExternalContext().getRequestMap();
         
         writer.startElement("tbody", null);
@@ -715,13 +723,8 @@ public class DataTableRenderer extends DataRenderer {
         
         int index = 0;
         for(Iterator<? extends Object> it = frozenRows.iterator(); it.hasNext();) {
-            requestMap.put(var, it.next());
-            
-            if(rowIndexVar != null) {
-                requestMap.put(rowIndexVar, index);
-            }
-            
-            encodeRow(context, table, clientId, index, rowIndexVar);
+            requestMap.put(var, it.next());            
+            encodeRow(context, table, clientId, index);
         }
 
         writer.endElement("tbody");
@@ -736,7 +739,7 @@ public class DataTableRenderer extends DataRenderer {
         summaryRow.encodeAll(context);
     }
 
-    public boolean encodeRow(FacesContext context, DataTable table, String clientId, int rowIndex, String rowIndexVar) throws IOException {
+    public boolean encodeRow(FacesContext context, DataTable table, String clientId, int rowIndex) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
         
         boolean selectionEnabled = table.isSelectionEnabled();
@@ -986,36 +989,26 @@ public class DataTableRenderer extends DataRenderer {
         writer.endElement("div");
     }
         
-    protected void encodeSubTable(FacesContext context, DataTable table, SubTable subTable, int rowIndex, String rowIndexVar) throws IOException {
-        table.setRowIndex(rowIndex);
-        if(!table.isRowAvailable()) {
-            return;
+    protected void encodeSubTable(FacesContext context, DataTable table, SubTable subTable, int first, int last) throws IOException {
+        for(int i = first; i < last; i++) {
+            table.setRowIndex(i);
+            if(!table.isRowAvailable()) {
+                break;
+            }
+            
+            subTable.encodeAll(context);
         }
-
-        //Row index var
-        if(rowIndexVar != null) {
-            context.getExternalContext().getRequestMap().put(rowIndexVar, rowIndex);
-        }
-        
-        subTable.encodeAll(context);
-        
-        if(rowIndexVar != null) {
-			context.getExternalContext().getRequestMap().remove(rowIndexVar);
-		}
     }
     
-    boolean isInSameGroup(FacesContext context, DataTable table, int currentRowIndex) {
-        Map<String,Object> requestMap = context.getExternalContext().getRequestMap();
-        String var = table.getVar();
-        
-        table.setRowIndex(currentRowIndex);
-        Object currentGroupByData = table.getSortBy();
+    boolean isInSameGroup(FacesContext context, DataTable table, int currentRowIndex, ValueExpression groupByVE, ELContext eLContext) {
+        table.setRowIndex(currentRowIndex); 
+        Object currentGroupByData = groupByVE.getValue(eLContext);
 
         table.setRowIndex(currentRowIndex + 1);
         if(!table.isRowAvailable())
             return false;
         
-        Object nextGroupByData = table.getSortBy();
+        Object nextGroupByData = groupByVE.getValue(eLContext);
         if(currentGroupByData != null && nextGroupByData.equals(currentGroupByData)) {
             return true;
         }
