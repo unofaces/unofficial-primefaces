@@ -259,11 +259,13 @@ PrimeFaces.widget.TreeTable = PrimeFaces.widget.BaseWidget.extend({
     },
     
     unselectAllNodes: function() {
-        var selectedNodes = this.tbody.children('tr.ui-state-highlight');
-        
+        var selectedNodes = this.tbody.children('tr.ui-state-highlight'); 
         for(var i = 0; i < selectedNodes.length; i++) {
             this.unselectNode(selectedNodes.eq(i), true);
         }
+        
+        this.selections = [];
+        this.writeSelections();
     },
     
     selectNodesInRange: function(node) {
@@ -306,13 +308,10 @@ PrimeFaces.widget.TreeTable = PrimeFaces.widget.BaseWidget.extend({
                 this.selectNode(descendant, true);
         }
         
-        var newSelections = [];
-        for(var i = 0; i < this.selections.length; i++) {
-            if(this.selections[i].indexOf(rowKey + '_') !== 0)
-                newSelections.push(this.selections[i]);
+        if(selected) {
+           this.removeDescendantsFromSelection(node.data('rk')); 
         }
-        this.selections = newSelections;
-
+        
         //propagate up
         var parentNode = this.getParent(node);
         if(parentNode) {
@@ -411,15 +410,21 @@ PrimeFaces.widget.TreeTable = PrimeFaces.widget.BaseWidget.extend({
 
         return false;
     },
+            
+    removeDescendantsFromSelection: function(rowKey) {
+        this.selections = $.grep(this.selections, function(value) {
+            return value.indexOf(rowKey + '_') !== 0;
+        });
+    },
     
     removeSelection: function(nodeKey) {
         this.selections = $.grep(this.selections, function(value) {
-            return value != nodeKey;
+            return value !== nodeKey;
         });
     },
     
     addToSelection: function(rowKey) {
-        if(!this.isSelected()) {
+        if(!this.isSelected(rowKey)) {
             this.selections.push(rowKey);
         }
     },
@@ -453,15 +458,17 @@ PrimeFaces.widget.TreeTable = PrimeFaces.widget.BaseWidget.extend({
             };
             
             options.params = [
-                {name: this.id + '_instantSelect', value: nodeKey}
+                {name: this.id + '_instantSelection', value: nodeKey}
             ];
             
             options.oncomplete = function(xhr, status, args) {
-                var rowKeys = args.descendantRowKeys.split(',');
-                for(var i = 0; i < rowKeys.length; i++) {
-                    $this.addToSelection(rowKeys[i]);
+                if(args.descendantRowKeys && args.descendantRowKeys !== '') {
+                    var rowKeys = args.descendantRowKeys.split(',');
+                    for(var i = 0; i < rowKeys.length; i++) {
+                        $this.addToSelection(rowKeys[i]);
+                    }
+                    $this.writeSelections();
                 }
-                $this.writeSelections();
             }
             
             if(this.hasBehavior('select')) {
