@@ -389,6 +389,7 @@ PrimeFaces.widget.TreeTable = PrimeFaces.widget.BaseWidget.extend({
         else {
             node.removeClass('ui-state-highlight ui-treetable-partialselected');
             checkboxIcon.removeClass('ui-icon ui-icon-check ui-icon-minus');
+            this.removeSelection(node.attr('data-rk'));
         }
         
         var parent = this.getParent(node);
