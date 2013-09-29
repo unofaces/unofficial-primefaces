@@ -896,6 +896,13 @@ PrimeFaces.widget.VerticalTree = PrimeFaces.widget.BaseTree.extend({
         if(dragNode.has(dropNode.get(0)).length) {
             return false;
         }
+        
+        //drop restriction
+        if(this.cfg.dropRestrict) {
+            if(this.cfg.dropRestrict === 'sibling' && dragNode.parent().get(0) === dropNode.parent().get(0)) {
+                return false;
+            }
+        }
        
         return true;
     },

@@ -140,13 +140,13 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
             }            
         });
         
-        sortableColumns.on('mouseover.dataTable', function() {
+        sortableColumns.on('mouseenter.dataTable', function() {
             var column = $(this);
             
             if(!column.hasClass('ui-state-active'))
                 column.addClass('ui-state-hover');
         })
-        .on('mouseout.dataTable', function() {
+        .on('mouseleave.dataTable', function() {
             var column = $(this);
             
             if(!column.hasClass('ui-state-active'))
