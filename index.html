@@ -4,27 +4,26 @@ title: Unofficial PrimeFaces
 prettify: true
 ---
 
-<div class="well well-small">
-  Build Status with CloudBees:
-  <a href="https://buildhive.cloudbees.com/job/primefaces/job/primefaces/">
-    <img src="https://buildhive.cloudbees.com/job/primefaces/job/primefaces/badge/icon"/>
-  </a>
+<a class="visible-desktop" href="https://github.com/primefaces/primefaces">
+  <img style="position: fixed; top: 0; right: 0; border: 0; z-index: 1040;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub">
+</a>
+
+<h3>Why?</h3>
+
+<p>The <a href="http://blog.primefaces.org/?p=2443">New Maintanance Policy</a> don't have freely available releases starting with PrimeFaces 3.5.</p>
+
+<div class="alert alert-success">
+  This work initiative aims to provide freely available repositories with the result of the integration of the changes from
+  <a href="https://code.google.com/p/primefaces/source/list">original <em>open source</em> repository</a>.
+  All sources came from the original repository under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a>.
+  The <strong>sources from this work</strong> are all hosted in <a href="https://github.com/primefaces/primefaces">GitHub</a>.
+  <strong>Fork it!</strong>
 </div>
 
 <h3>Unofficial Releases</h3>
 
-<p>Unofficial Maven Repository for non-publicly released PrimeFaces versions.</p>
-
-<h4>Warnings</h4>
-
-<div class="alert alert-danger">
-  In the <strong>3.5.9-UR</strong> and <strong>3.5.10-UR</strong> releases the feature <a href="{{ site.issue_tracker }}5850">5850</a> ended up coming down from upstream version.
-  See the <a href="/widgetvar-workaround.html">workaround</a> if you are using one of them.
-</div>
-
-<div class="alert alert-danger">
-  From <strong>3.5.8-UR</strong> releases has one bug in <code>AjaxBehaviour.saveState</code>. In the <strong>3.5.13-UR2</strong> release has fixed.
-</div>
+<p>Unofficial Maven Repository for unofficial releases based in the changes from
+<a href="https://code.google.com/p/primefaces/source/list">original <em>open source</em> repository</a>.</p>
 
 <table class="table table-bordered table-hover">
   <thead>
@@ -61,7 +60,20 @@ prettify: true
 &lt;/repository&gt;
 </pre>
 
-<p class="alert alert-danger">This unofficial repository <b>does not contain</b> artifacts for <b>themes</b>. Therefore, keep the official repository in your POM.</p>
+<h3>Disclaimers</h3>
+
+<div class="alert alert-danger">
+  This unofficial repository <b>does not contain</b> artifacts for <b>themes</b>. Therefore, keep the official repository in your POM.
+</div>
+
+<div class="alert alert-danger">
+  In the <strong>3.5.9-UR</strong> and <strong>3.5.10-UR</strong> releases the feature <a href="{{ site.issue_tracker }}5850">5850</a> ended up coming down from upstream version.
+  See the <a href="/widgetvar-workaround.html">workaround</a> if you are using one of them.
+</div>
+
+<div class="alert alert-danger">
+  From <strong>3.5.8-UR</strong> releases has one bug in <code>AjaxBehaviour.saveState</code>. In the <strong>3.5.13-UR2</strong> release has fixed.
+</div>
 
 <h3>Lastest Official Release</h3>
 
