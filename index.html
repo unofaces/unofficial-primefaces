@@ -20,6 +20,12 @@ prettify: true
   <strong>Fork it!</strong>
 </div>
 
+<div class="alert alert-danger">
+  <strong>Need support?</strong> See the <a href="http://www.primefaces.org/support.html">official support page</a>.
+  The releases distributed here are not officially supported. Use at your own risk, as the respective clauses in
+  <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a>.
+</div>
+
 <h3>Unofficial Releases</h3>
 
 <p>Unofficial Maven Repository for unofficial releases based in the changes from
@@ -61,7 +67,7 @@ prettify: true
 &lt;/repository&gt;
 </pre>
 
-<h3>Disclaimers</h3>
+<h3>Warnings</h3>
 
 <div class="alert alert-danger">
   This unofficial repository <b>does not contain</b> artifacts for <b>themes</b>. Therefore, keep the official repository in your POM.
@@ -76,26 +82,7 @@ prettify: true
   From <strong>3.5.8-UR</strong> releases has one bug in <code>AjaxBehaviour.saveState</code>. In the <strong>3.5.13-UR2</strong> release has fixed.
 </div>
 
-<h3>Lastest Official Release</h3>
+<h3>Lastest Official Releases</h3>
 
-<table class="table table-bordered table-hover">
-  <thead>
-    <tr>
-      <th>Version</th>
-      <th>Binary</th>
-      <th>Sources</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for release in site.releases.officials %}
-    <tr>
-      <td>{{ release.version }}</td>
-      <td><a href="{{ site.repo_url }}/org/primefaces/primefaces/{{ release.version }}/primefaces-{{ release.version }}.jar">primefaces-{{ release.version }}.jar</a>
-      <td><a href="{{ site.repo_url }}/org/primefaces/primefaces/{{ release.version }}/primefaces-{{ release.version }}-sources.jar">primefaces-{{ release.version }}-sources.jar</a>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-<p>Or go to <a href="http://www.primefaces.org">Official Site</a> for download official releases.</p>
+<p>Please go to the <a href="http://www.primefaces.org">Official Site</a> for download official releases.</p>
 
