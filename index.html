@@ -25,13 +25,12 @@ prettify: true
 <p>Unofficial Maven Repository for unofficial releases based in the changes from
 <a href="https://code.google.com/p/primefaces/source/list">original <em>open source</em> repository</a>.</p>
 
-<table class="table table-bordered table-hover">
+<table id="unofficial-releases" class="table table-bordered table-hover">
   <thead>
     <tr>
       <th>Version</th>
       <th>Base</th>
-      <th>Binary</th>
-      <th>Sources</th>
+      <th>Resources</th>
       <th>Notes</th>
     </tr>
   </thead>
@@ -41,8 +40,10 @@ prettify: true
     <tr>
       <td>{{ release.version }}-{{ release.suffix }}</td>
       <td><a href="{{ site.browse_source }}/primefaces/trunk?r={{ release.revision }}" title="{{ release.date_time | date_to_rfc822 }}">r{{ release.revision }}</a></td>
-      <td><a href="{{ site.repo_url }}/org/primefaces/primefaces/{{ full_version }}/primefaces-{{ full_version }}.jar">primefaces-{{ full_version }}.jar</a>
-      <td><a href="{{ site.repo_url }}/org/primefaces/primefaces/{{ full_version }}/primefaces-{{ full_version }}-sources.jar">primefaces-{{ full_version }}-sources.jar</a>
+      <td>
+        <a href="{{ site.repo_url }}/org/primefaces/primefaces/{{ full_version }}/primefaces-{{ full_version }}.jar">Binary</a>
+        <a href="{{ site.repo_url }}/org/primefaces/primefaces/{{ full_version }}/primefaces-{{ full_version }}-sources.jar">Sources</a>
+      </td>
       <td><a href="/changelog/{{ release.version }}.html">ChangeLog</a></td>
     </tr>
     {% endfor %}

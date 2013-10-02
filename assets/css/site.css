@@ -51,6 +51,12 @@ body {
   }
 }
 
+@media (min-width: 978px) {
+  table#unofficial-releases {
+    max-width: 65%;
+  }
+}
+
 .container .credit {
   margin: 20px 0;
 }
