@@ -1208,6 +1208,28 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.BaseWidget.extend({
         this.selection = [];
         this.writeSelections();
     },
+            
+    selectAllRowsOnPage: function() {
+        var rows = this.tbody.children('tr');
+        for(var i = 0; i < rows.length; i++) {
+            var row = rows.eq(i);
+            this.selectRow(row, true);
+        }
+    },
+            
+    unselectAllRowsOnPage: function() {
+        var rows = this.tbody.children('tr');
+        for(var i = 0; i < rows.length; i++) {
+            var row = rows.eq(i);
+            this.unselectRow(row, true);
+        }
+    },
+            
+    selectAllRows: function() {
+        this.selectAllRowsOnPage();
+        this.selection = new Array('@all');
+        this.writeSelections();
+    },
     
     /**
      * Toggles all rows with checkbox
