@@ -1,0 +1,33 @@
+---
+layout:  changelog
+release: 3.5.17
+changelog:
+  defects:
+   - num: 3640
+     txt: "NullPointerException during state saving with p:tree inside loops (ui:repeat, p:tabView, ...)"
+   - num: 6081
+     txt: "LazyDataTable.setRowIndex throws arithmetic exception: division by 0. (Part 2)"
+   - num: 6191
+     txt: "p:outputPanel deferred mode in case of e.g. a controller exception runs forever"
+   - num: 6199
+     txt: "checked focus for selectOneRadio and checkbox in a dialog component"
+   - num: 6210
+     txt: "Dynamic resource streaming need a UID in the URL if cache == false"
+   - num: 6221
+     txt: "OutputLabel might throw exception with a custom bundle/resolver"
+
+  enhancements:
+   - num: 5597
+     txt: "Improve getConverter(..) in ComponentUtils.java"
+   - num: 6232
+     txt: "Improve contextMenu behavior for Tree"
+
+  new_features:
+   - num: 6200
+     txt: "New selection methods for datatable client side api"
+   - num: 6209
+     txt: "Keyboard accessibility for Paginator"
+   - num: 6225
+     txt: "ContextMenu doesn't show up if tree is empty"
+---
+
