@@ -735,7 +735,7 @@ PrimeFaces.widget.ContextMenu = PrimeFaces.widget.TieredMenu.extend({
                         var nodeContent = $(this);
                         
                         if($this.cfg.nodeType === undefined || nodeContent.parent().data('nodetype') === $this.cfg.nodeType) {
-                        	window[$this.cfg.targetWidgetVar].nodeClick(e, nodeContent);
+                        	window[$this.cfg.targetWidgetVar].nodeRightClick(e, nodeContent);
                             $this.show(e);
                             e.preventDefault();
                         }
