@@ -50,6 +50,7 @@ PrimeFaces.widget.Tooltip = PrimeFaces.widget.BaseWidget.extend({
                         var element = $(this);
 
                         if($this.globalTitle) {
+                            clearTimeout($this.timeout);
                             $this.jq.hide();
                             element.attr('title', $this.globalTitle);
                             $this.globalTitle = null;
@@ -110,18 +111,18 @@ PrimeFaces.widget.Tooltip = PrimeFaces.widget.BaseWidget.extend({
     },
     
     show: function() {
-        var _self = this;
+        var $this = this;
 
         this.timeout = setTimeout(function() {
-            _self.align();
-            _self.jq.show(_self.cfg.showEffect, {}, 400);
+            $this.align();
+            $this.jq.show($this.cfg.showEffect, {}, 250);
         }, 150);
     },
     
     hide: function() {
         clearTimeout(this.timeout);
 
-        this.jq.hide(this.cfg.hideEffect, {}, 400, function() {
+        this.jq.hide(this.cfg.hideEffect, {}, 250, function() {
             $(this).css('z-index', '');
         });
     }
