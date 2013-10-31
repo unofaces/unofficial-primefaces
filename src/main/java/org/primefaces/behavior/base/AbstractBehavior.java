@@ -47,11 +47,7 @@ public abstract class AbstractBehavior extends ClientBehaviorBase
 
     public void setLiteral(Enum<?> property, Object val) {
     	String attr = property.name();
-    	if (val == null && literals.containsKey(attr)) {
-    		literals.remove(attr);
-    	} else {
-    		literals.put(attr, val);
-    	}
+    	setLiteral(attr, val);
     }
 	
     public void setValueExpression(String attr, ValueExpression ve) {
@@ -64,11 +60,7 @@ public abstract class AbstractBehavior extends ClientBehaviorBase
 
     public void setValueExpression(Enum<?> property, ValueExpression ve) {
     	String attr = property.name();
-    	if (ve == null && bindings.containsKey(attr)) {
-    		bindings.remove(attr);
-    	} else {
-    		bindings.put(attr, ve);
-    	}
+    	setValueExpression(attr, ve);
     }
 
     public <T> T eval(String attr, T unspecifiedValue) {
@@ -95,6 +87,15 @@ public abstract class AbstractBehavior extends ClientBehaviorBase
     	return eval(property.name(), unspecifiedValue);
     }
 
+    protected boolean isAttributeSet(String attr) {
+    	return literals.containsKey(attr) || bindings.containsKey(attr);
+    }
+
+    protected boolean isAttributeSet(Enum<?> property) {
+    	String attr = property.name();
+    	return isAttributeSet(attr);
+    }
+    
     @Override
     public Object saveState(FacesContext context) {
         if (context == null) {

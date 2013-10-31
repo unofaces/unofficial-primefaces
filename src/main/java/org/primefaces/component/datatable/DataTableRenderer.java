@@ -93,8 +93,8 @@ public class DataTableRenderer extends DataRenderer {
                 table.loadLazyData();
         }
         
-        //default sort
-        if(table.getSortBy() != null && !table.isLazy()) {
+        boolean defaultSorted = (table.getValueExpression("sortBy") != null || table.getSortBy() != null);
+        if(defaultSorted && !table.isLazy()) {
             SortFeature sortFeature = (SortFeature) table.getFeature(DataTableFeatureKey.SORT);
             
             if(table.isMultiSort())
@@ -321,29 +321,36 @@ public class DataTableRenderer extends DataRenderer {
         
         ResponseWriter writer = context.getResponseWriter();
         String clientId = column.getContainerClientId(context);
-        Object tableSortBy = table.getSortBy();
+
+        ValueExpression columnSortByVE = column.getValueExpression("sortBy");
         Object columnSortBy = column.getSortBy();
-        boolean isSortable = columnSortBy != null;
+        boolean sortable = (columnSortByVE != null || columnSortBy != null);
         boolean hasFilter = column.getFilterBy() != null;
         String selectionMode = column.getSelectionMode();
         String sortIcon = null;
         boolean resizable = table.isResizableColumns() && column.isResizable();
         
-        String columnClass = isSortable ? DataTable.COLUMN_HEADER_CLASS + " " + DataTable.SORTABLE_COLUMN_CLASS : DataTable.COLUMN_HEADER_CLASS;
+        String columnClass = sortable ? DataTable.COLUMN_HEADER_CLASS + " " + DataTable.SORTABLE_COLUMN_CLASS : DataTable.COLUMN_HEADER_CLASS;
         columnClass = hasFilter ? columnClass + " " + DataTable.FILTER_COLUMN_CLASS : columnClass;
         columnClass = selectionMode != null ? columnClass + " " + DataTable.SELECTION_COLUMN_CLASS : columnClass;
         columnClass = resizable ? columnClass + " " + DataTable.RESIZABLE_COLUMN_CLASS : columnClass;
         columnClass = column.getStyleClass() != null ? columnClass + " " + column.getStyleClass() : columnClass;
         
-        if(isSortable) {
-            if(tableSortBy != null) {
+        if(sortable) {
+            ValueExpression tableSortByVE = table.getValueExpression("sortBy");
+            Object tableSortBy = table.getSortBy();
+            boolean defaultSorted = (tableSortByVE != null || tableSortBy != null);
+                    
+            if(defaultSorted) {
                 if(table.isMultiSort()) {
                     List<SortMeta> sortMeta = table.getMultiSortMeta();
                     
                     if(sortMeta != null) {
                         for(SortMeta meta : sortMeta) {
-                            sortIcon = resolveDefaultSortIcon(columnSortBy, meta.getColumn().getSortBy(), meta.getSortOrder().name());
-                            
+                            UIColumn sortColumn = meta.getColumn();
+                            sortIcon = resolveDefaultSortIcon(columnSortByVE, columnSortBy, 
+                                    sortColumn.getValueExpression("sortBy"), sortColumn.getSortBy(), meta.getSortOrder().name());
+
                             if(sortIcon != null) {
                                 break;
                             }
@@ -351,7 +358,7 @@ public class DataTableRenderer extends DataRenderer {
                     }
                 }
                 else {
-                    sortIcon = resolveDefaultSortIcon(columnSortBy, tableSortBy, table.getSortOrder());
+                    sortIcon = resolveDefaultSortIcon(columnSortByVE, columnSortBy, tableSortByVE, tableSortBy, table.getSortOrder());
                 }
             }
             
@@ -408,10 +415,31 @@ public class DataTableRenderer extends DataRenderer {
         writer.endElement("th");
     }
     
-    protected String resolveDefaultSortIcon(Object columnSortBy, Object tableSortBy, String sortOrder) {
-        String sortIcon = null;
+    protected String resolveDefaultSortIcon(ValueExpression columnSortByVE, Object columnSortBy, ValueExpression tableSortByVE, Object tableSortBy, String sortOrder) {
+        if(columnSortByVE != null && tableSortByVE != null)
+            return resolveDefaultSortIconFromExpression(columnSortByVE, tableSortByVE, sortOrder);
+        else 
+            return resolveDefaultSortIconFromProperty(columnSortBy, tableSortBy, sortOrder);
+    }
+    
+    protected String resolveDefaultSortIconFromProperty(Object columnSortBy, Object tableSortBy, String sortOrder) {
+        String sortIcon = null;         
 
         if(tableSortBy != null && tableSortBy.equals(columnSortBy)) {
+            if(sortOrder.equalsIgnoreCase("ASCENDING"))
+                sortIcon = DataTable.SORTABLE_COLUMN_ASCENDING_ICON_CLASS;
+            else if(sortOrder.equalsIgnoreCase("DESCENDING"))
+                sortIcon = DataTable.SORTABLE_COLUMN_DESCENDING_ICON_CLASS;
+        }
+        return sortIcon;
+    }
+    
+    protected String resolveDefaultSortIconFromExpression(ValueExpression columnSortBy, ValueExpression tableSortBy, String sortOrder) {
+        String columnSortByExpression = columnSortBy.getExpressionString();
+        String tableSortByExpression = tableSortBy.getExpressionString();
+        String sortIcon = null;
+
+        if(tableSortByExpression != null && tableSortByExpression.equals(columnSortByExpression)) {
             if(sortOrder.equalsIgnoreCase("ASCENDING"))
                 sortIcon = DataTable.SORTABLE_COLUMN_ASCENDING_ICON_CLASS;
             else if(sortOrder.equalsIgnoreCase("DESCENDING"))
@@ -686,9 +714,17 @@ public class DataTableRenderer extends DataRenderer {
         String clientId = table.getClientId(context);
         SummaryRow summaryRow = table.getSummaryRow();
         ELContext eLContext = context.getELContext();
-        ValueExpression groupByVe = (table.getSortBy() == null || table.isMultiSort()) ? null : context.getApplication().getExpressionFactory().createValueExpression(
+        ValueExpression groupByVE = null;
+        ValueExpression tableSortByVE = table.getValueExpression("sortBy");
+        if(tableSortByVE != null) {
+            groupByVE = tableSortByVE;
+        }
+        else {
+            groupByVE = (table.getSortBy() == null || table.isMultiSort()) ? null : context.getApplication().getExpressionFactory().createValueExpression(
                         eLContext, "#{" + table.getVar() + "." + table.getSortBy() + "}", Object.class);
-        boolean encodeSummaryRow = (summaryRow != null && groupByVe != null);
+        }
+        
+        boolean encodeSummaryRow = (summaryRow != null && groupByVE != null);
         
         for(int i = first; i < last; i++) {
             table.setRowIndex(i);
@@ -698,7 +734,7 @@ public class DataTableRenderer extends DataRenderer {
 
             encodeRow(context, table, clientId, i);
 
-            if(encodeSummaryRow && !isInSameGroup(context, table, i, groupByVe, eLContext)) {
+            if(encodeSummaryRow && !isInSameGroup(context, table, i, groupByVE, eLContext)) {
                 table.setRowIndex(i);
                 encodeSummaryRow(context, table, summaryRow);
             }
