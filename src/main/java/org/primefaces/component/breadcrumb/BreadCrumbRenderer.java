@@ -43,9 +43,10 @@ public class BreadCrumbRenderer extends BaseMenuRenderer {
 		String clientId = breadCrumb.getClientId(context);
 		String styleClass = breadCrumb.getStyleClass();
 		styleClass = styleClass == null ? BreadCrumb.CONTAINER_CLASS : BreadCrumb.CONTAINER_CLASS + " " + styleClass;
+        boolean isIconHome = breadCrumb.getHomeDisplay().equals("icon");
         
         //home icon for first item
-        if(breadCrumb.getChildCount() > 0) {
+        if(isIconHome && breadCrumb.getChildCount() > 0) {
             ((MenuItem) breadCrumb.getChildren().get(0)).setStyleClass("ui-icon ui-icon-home");
         }
 
