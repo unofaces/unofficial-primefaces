@@ -62,6 +62,7 @@ PrimeFaces.widget.AutoComplete = PrimeFaces.widget.BaseWidget.extend({
                 this.itemtip = $('<div id="' + this.id + '_itemtip" class="ui-autocomplete-itemtip ui-state-highlight ui-widget ui-corner-all ui-shadow"></div>').appendTo(document.body);
                 this.cfg.itemtipMyPosition = this.cfg.itemtipMyPosition||'left top';
                 this.cfg.itemtipAtPosition = this.cfg.itemtipAtPosition||'right bottom';
+                this.cfg.checkForScrollbar = (this.cfg.itemtipAtPosition.indexOf('right') !== -1);
             }
 
             //dialog support
@@ -376,8 +377,17 @@ PrimeFaces.widget.AutoComplete = PrimeFaces.widget.BaseWidget.extend({
                         my: this.cfg.itemtipMyPosition
                         ,at: this.cfg.itemtipAtPosition
                         ,of: item
-                    })
-                    .show();
+                    });
+                    
+        //scrollbar offset
+        if(this.cfg.checkForScrollbar) {
+            if(this.panel.innerHeight() < this.panel.children('.ui-autocomplete-items').outerHeight(true)) {
+                var panelOffset = this.panel.offset();
+                this.itemtip.css('left', panelOffset.left + this.panel.outerWidth());
+            }
+        }
+                    
+        this.itemtip.show();
     },
             
     showSuggestions: function(query) {
@@ -468,7 +478,7 @@ PrimeFaces.widget.AutoComplete = PrimeFaces.widget.BaseWidget.extend({
                 for(var i=0; i < updates.length; i++) {
                     var update = updates.eq(i),
                     id = update.attr('id'),
-                    data = update.get(0).childNodes[0].nodeValue;                    
+                    data = PrimeFaces.ajax.AjaxUtils.getContent(update);                    
 
                     if(id === _self.id) {
                         _self.panel.html(data);
@@ -674,4 +684,4 @@ PrimeFaces.widget.AutoComplete = PrimeFaces.widget.BaseWidget.extend({
                 });
     }
     
-});
+}); 

@@ -58,7 +58,7 @@ PrimeFaces.widget.BaseTree = PrimeFaces.widget.BaseWidget.extend({
                 for(var i=0; i < updates.length; i++) {
                     var update = updates.eq(i),
                     id = update.attr('id'),
-                    content = update.get(0).childNodes[0].nodeValue;
+                    content = PrimeFaces.ajax.AjaxUtils.getContent(update);
 
                     if(id === _self.id) {
                         var nodeChildrenContainer = _self.getNodeChildrenContainer(node);
@@ -315,7 +315,7 @@ PrimeFaces.widget.BaseTree = PrimeFaces.widget.BaseWidget.extend({
             var node = nodeContent.parent(),
             selectable = nodeContent.hasClass('ui-tree-selectable');
     
-            if(selectable) {
+            if(selectable && this.cfg.selectionMode) {
                 var selected = this.isNodeSelected(node);
                 if(!selected) {
                     if(this.isCheckboxSelection()) {
@@ -972,7 +972,7 @@ PrimeFaces.widget.VerticalTree = PrimeFaces.widget.BaseTree.extend({
         
         //drop restriction
         if(this.cfg.dropRestrict) {
-            if(this.cfg.dropRestrict === 'sibling' && dragNode.parent().get(0) === dropNode.parent().get(0)) {
+            if(this.cfg.dropRestrict === 'sibling' && dragNode.parent().get(0) !== dropNode.parent().get(0)) {
                 return false;
             }
         }

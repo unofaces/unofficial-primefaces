@@ -323,9 +323,9 @@ public class DataTableRenderer extends DataRenderer {
         String clientId = column.getContainerClientId(context);
 
         ValueExpression columnSortByVE = column.getValueExpression("sortBy");
-        Object columnSortBy = column.getSortBy();
-        boolean sortable = (columnSortByVE != null || columnSortBy != null);
-        boolean hasFilter = column.getFilterBy() != null;
+        Object columnSortByProperty = column.getSortBy();
+        boolean sortable = (columnSortByVE != null || columnSortByProperty != null);
+        boolean hasFilter = (column.getValueExpression("filterBy") != null || column.getFilterBy() != null);
         String selectionMode = column.getSelectionMode();
         String sortIcon = null;
         boolean resizable = table.isResizableColumns() && column.isResizable();
@@ -348,7 +348,7 @@ public class DataTableRenderer extends DataRenderer {
                     if(sortMeta != null) {
                         for(SortMeta meta : sortMeta) {
                             UIColumn sortColumn = meta.getColumn();
-                            sortIcon = resolveDefaultSortIcon(columnSortByVE, columnSortBy, 
+                            sortIcon = resolveDefaultSortIcon(columnSortByVE, columnSortByProperty, 
                                     sortColumn.getValueExpression("sortBy"), sortColumn.getSortBy(), meta.getSortOrder().name());
 
                             if(sortIcon != null) {
@@ -358,7 +358,7 @@ public class DataTableRenderer extends DataRenderer {
                     }
                 }
                 else {
-                    sortIcon = resolveDefaultSortIcon(columnSortByVE, columnSortBy, tableSortByVE, tableSortBy, table.getSortOrder());
+                    sortIcon = resolveDefaultSortIcon(columnSortByVE, columnSortByProperty, tableSortByVE, tableSortBy, table.getSortOrder());
                 }
             }
             
@@ -475,6 +475,7 @@ public class DataTableRenderer extends DataRenderer {
         Map<String,String> params = context.getExternalContext().getRequestParameterMap();
         ResponseWriter writer = context.getResponseWriter();
         String separator = String.valueOf(UINamingContainer.getSeparatorChar(context));
+        boolean disableTabbing = table.getScrollWidth() != null;
 
         String filterId = column.getContainerClientId(context) + separator + "filter";
         String filterStyleClass = column.getFilterStyleClass();
@@ -507,6 +508,9 @@ public class DataTableRenderer extends DataRenderer {
             writer.writeAttribute("class", filterStyleClass, null);
             writer.writeAttribute("value", filterValue , null);
             writer.writeAttribute("autocomplete", "off", null);
+            
+            if(disableTabbing)
+                writer.writeAttribute("tabindex", "-1", null);
 
             if(column.getFilterStyle() != null)
                 writer.writeAttribute("style", column.getFilterStyle(), null);
@@ -523,6 +527,9 @@ public class DataTableRenderer extends DataRenderer {
             writer.writeAttribute("id", filterId, null);
             writer.writeAttribute("name", filterId, null);
             writer.writeAttribute("class", filterStyleClass, null);
+            
+            if(disableTabbing)
+                writer.writeAttribute("tabindex", "-1", null);
 
             SelectItem[] itemsArray = (SelectItem[]) getFilterOptions(column);
 
