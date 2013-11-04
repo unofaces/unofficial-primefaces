@@ -878,6 +878,17 @@
                     PrimeFaces.ajax.Queue.poll();
                 }
             });
+        },
+                
+        getContent: function(update) {
+            var nodes = update.get(0).childNodes,
+            content = '';
+
+            for(var i = 0; i < nodes.length; i++) {
+                content += nodes[i].nodeValue;
+            }
+            
+            return content;
         }
     };
 
@@ -899,8 +910,8 @@
         for(var i=0; i < updates.length; i++) {
             var update = updates.eq(i),
             id = update.attr('id'),
-            content = update.get(0).childNodes[0].nodeValue;
-
+            content = PrimeFaces.ajax.AjaxUtils.getContent(update);
+            
             PrimeFaces.ajax.AjaxUtils.updateElement.call(this, id, content);
         }
 
