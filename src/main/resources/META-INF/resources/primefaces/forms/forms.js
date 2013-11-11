@@ -1132,6 +1132,8 @@ PrimeFaces.widget.SelectOneMenu = PrimeFaces.widget.BaseWidget.extend({
         else {
             this.itemsWrapper.height(this.cfg.initialHeight);
         }
+        
+        this.alignPanel();
     },
     
     getSelectedValue: function() {
