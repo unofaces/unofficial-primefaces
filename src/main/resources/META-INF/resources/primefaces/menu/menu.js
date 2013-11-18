@@ -194,6 +194,10 @@ PrimeFaces.widget.TieredMenu = PrimeFaces.widget.Menu.extend({
             });
         }
         
+        this.links.filter('.ui-submenu-link').click(function(e) {
+            e.preventDefault();
+        });
+        
         this.jq.find('ul.ui-menu-list').mouseleave(function(e) {
            if(_self.activeitem) {
                _self.deactivate(_self.activeitem);
@@ -804,7 +808,7 @@ PrimeFaces.widget.ContextMenu = PrimeFaces.widget.TieredMenu.extend({
         }
         
         if(this.cfg.beforeShow) {
-            this.cfg.beforeShow.call(this);
+            this.cfg.beforeShow.call(this, e);
         }
 
         this.jq.css({
@@ -891,6 +895,13 @@ PrimeFaces.widget.MegaMenu = PrimeFaces.widget.BaseWidget.extend({
                         _self.activate(menuitem);
                     }
                 }
+                
+                e.preventDefault();
+            });
+        }
+        else {
+            this.rootLinks.filter('.ui-submenu-link').click(function(e) {
+                e.preventDefault();
             });
         }
 

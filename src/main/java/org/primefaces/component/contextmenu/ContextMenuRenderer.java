@@ -50,7 +50,7 @@ public class ContextMenuRenderer extends TieredMenuRenderer {
         
         wb.attr("nodeType", menu.getNodeType(), null)
             .attr("event", menu.getEvent(), null)
-            .callback("beforeShow", "function()", menu.getBeforeShow());
+            .callback("beforeShow", "function(event)", menu.getBeforeShow());
 		
         startScript(writer, clientId);
         writer.write(wb.build());

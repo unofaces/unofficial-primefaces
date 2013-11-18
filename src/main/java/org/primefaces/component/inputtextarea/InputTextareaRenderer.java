@@ -145,6 +145,10 @@ public class InputTextareaRenderer extends InputRenderer {
 
         String valueToRender = ComponentUtils.getValueToRender(context, inputTextarea);
 		if(valueToRender != null) {
+            if(inputTextarea.isAddLine()) {
+                writer.writeText("\n", null);
+            }
+            
 			writer.writeText(valueToRender, "value");
 		}
 
