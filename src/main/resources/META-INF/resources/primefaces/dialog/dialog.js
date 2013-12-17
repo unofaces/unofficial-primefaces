@@ -119,23 +119,24 @@ PrimeFaces.widget.Dialog = PrimeFaces.widget.BaseWidget.extend({
                     var target = $(event.target);
 
                     if(event.keyCode === $.ui.keyCode.TAB) {
-                        var tabbables = $this.content.find(':tabbable');
+                        var tabbables = $this.content.find(':tabbable').add($this.footer.find(':tabbable'));
                         if(tabbables.length) {
                             var first = tabbables.filter(':first'),
                             last = tabbables.filter(':last');
                 
                             if(target.is(document.body)) {
                                 first.focus(1);
+                                event.preventDefault();
                             }
                             else if(event.target === last[0] && !event.shiftKey) {
                                 first.focus(1);
+                                event.preventDefault();
                             } 
                             else if (event.target === first[0] && event.shiftKey) {
                                 last.focus(1);
+                                event.preventDefault();
                             }
                         }
-                        
-                        event.preventDefault();
                     }
                     else if(!target.is(document.body) && (target.zIndex() < $this.jq.zIndex())) {
                         event.preventDefault();
