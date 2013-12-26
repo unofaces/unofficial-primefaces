@@ -505,11 +505,11 @@ PrimeFaces.converter = {
 
 PrimeFaces.vb = function(cfg) {
     return this.validate(cfg);
-}
+};
 
 PrimeFaces.vi = function(element) {
     this.validateInstant(element);
-}
+};
 
 PrimeFaces.validate = function(cfg) {
     var vc = PrimeFaces.util.ValidationContext,
@@ -557,13 +557,13 @@ PrimeFaces.validate = function(cfg) {
         
         return false;
     }
-}
+};
 
 PrimeFaces.validateInputs = function(inputs) {
     for(var i = 0; i < inputs.length; i++) {
         this.validateInput(inputs.eq(i));
     }
-}
+};
 
 PrimeFaces.validateInput = function(element) {
     var vc = PrimeFaces.util.ValidationContext,
@@ -630,7 +630,7 @@ PrimeFaces.validateInput = function(element) {
         highlighter.unhighlight(element);
     else
         highlighter.highlight(element);  
-}
+};
 
 PrimeFaces.validateInstant = function(id) {
     var vc = PrimeFaces.util.ValidationContext,
@@ -658,7 +658,7 @@ PrimeFaces.validateInstant = function(id) {
     }
 
     vc.clear();
-}
+};
 
 PrimeFaces.util.ValidationContext = {
 
@@ -690,7 +690,7 @@ PrimeFaces.util.ValidationContext = {
             return {
                 summary: s,
                 detail: d
-            }
+            };
         }
 
         return null;
@@ -707,7 +707,7 @@ PrimeFaces.util.ValidationContext = {
     },
 
     getLabel: function(element) {
-        return (element.data('p-label')||element.attr('id'))
+        return (element.data('p-label')||element.attr('id'));
     },
 
     renderMessages: function(container) {
@@ -829,18 +829,34 @@ PrimeFaces.util.ValidationContext = {
         
         return localeSettings;
     }
-}
+};
 
 PrimeFaces.validator.Highlighter = {
+    
+    highlightLabel: function(forElement) {
+        var label = $("label[for='" + forElement.attr('id') + "']");
+        if (label.hasClass('ui-outputlabel')) {
+            label.addClass('ui-state-error');
+        }
+    },
+    
+    unhighlightLabel: function(forElement) {
+        var label = $("label[for='" + forElement.attr('id') + "']");
+        if (label.hasClass('ui-outputlabel')) {
+            label.removeClass('ui-state-error');
+        }
+    },
     
     'default': {
         
         highlight: function(element) {
             element.addClass('ui-state-error');
+            PrimeFaces.validator.Highlighter.highlightLabel(element);
         },
         
         unhighlight: function(element) {
             element.removeClass('ui-state-error');
+            PrimeFaces.validator.Highlighter.unhighlightLabel(element);
         }
     },
     
@@ -848,10 +864,12 @@ PrimeFaces.validator.Highlighter = {
         
         highlight: function(element) {
             element.parent().next().addClass('ui-state-error');
+            PrimeFaces.validator.Highlighter.highlightLabel(element.parent().parent());
         },
         
         unhighlight: function(element) {
             element.parent().next().removeClass('ui-state-error');
+            PrimeFaces.validator.Highlighter.unhighlightLabel(element.parent().parent());
         }
         
     },
@@ -860,10 +878,12 @@ PrimeFaces.validator.Highlighter = {
         
         highlight: function(element) {
             element.closest('.ui-inputfield').addClass('ui-state-error');
+            PrimeFaces.validator.Highlighter.highlightLabel(element.closest('.ui-inputfield'));
         },
         
         unhighlight: function(element) {
             element.closest('.ui-inputfield').removeClass('ui-state-error');
+            PrimeFaces.validator.Highlighter.unhighlightLabel(element.closest('.ui-inputfield'));
         }
         
     },
@@ -872,10 +892,12 @@ PrimeFaces.validator.Highlighter = {
         
         highlight: function(element) {
             element.parent().siblings('.ui-selectonemenu-trigger').addClass('ui-state-error').parent().addClass('ui-state-error');
+            PrimeFaces.validator.Highlighter.highlightLabel(element.parent());
         },
         
         unhighlight: function(element) {
             element.parent().siblings('.ui-selectonemenu-trigger').removeClass('ui-state-error').parent().removeClass('ui-state-error');
+            PrimeFaces.validator.Highlighter.unhighlightLabel(element.parent());
         }
         
     },
@@ -884,10 +906,12 @@ PrimeFaces.validator.Highlighter = {
         
         highlight: function(element) {
             element.parent().addClass('ui-state-error');
+            PrimeFaces.validator.Highlighter.highlightLabel(element.parent());
         },
         
         unhighlight: function(element) {
-            element.removeClass('ui-state-error');
+            element.parent().removeClass('ui-state-error');
+            PrimeFaces.validator.Highlighter.unhighlightLabel(element.parent());
         }
         
     }
