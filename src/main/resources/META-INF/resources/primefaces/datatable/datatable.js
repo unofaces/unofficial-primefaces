@@ -133,12 +133,12 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.DeferredWidget.extend({
                 column.removeClass('ui-state-hover');
         })
         .on('click.dataTable', function(e) {
-            if($(e.target).is(':not(th,span)')) {
+            if($this.isEmpty()||$(e.target).is(':not(th,span)')) {
                 return;
             }
 
             PrimeFaces.clearSelection();
-                
+                            
             var columnHeader = $(this),
             sortOrder = columnHeader.data('sortorder')||'DESCENDING',
             metaKey = e.metaKey||e.ctrlKey;
@@ -976,7 +976,7 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.DeferredWidget.extend({
         $this = this;
        
         //unselect previously selected rows with shift
-        if(this.cursorIndex) {
+        if(this.cursorIndex !== null) {
             var oldCursorIndex = this.cursorIndex,
             rowsToUnselect = oldCursorIndex > this.originRowIndex ? rows.slice(this.originRowIndex, oldCursorIndex + 1) : rows.slice(oldCursorIndex, this.originRowIndex + 1);
 
