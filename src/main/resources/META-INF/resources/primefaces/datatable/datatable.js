@@ -1357,7 +1357,7 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.DeferredWidget.extend({
         if(this.hasBehavior('rowToggle')) {
             var rowToggleBehavior = this.cfg.behaviors['rowToggle'];
 
-            rowToggleBehavior.call(this, options);
+            rowToggleBehavior.call(this, row, options);
         } 
         else {
             PrimeFaces.ajax.AjaxRequest(options); 
