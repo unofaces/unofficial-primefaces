@@ -17,6 +17,8 @@ changelog:
      txt: "SelectCheckboxMenu - Problem on Checking/Unchecking All"
    - num: 6463
      txt: "LazyLoad call may fail due to WebSphere bug"
+   - num: 0
+     txt: "RowExpansion doesn't pass ajax params <span class=\"label\">UR2</span>"
 
   enhancements:
    - num: 6478
@@ -24,4 +26,8 @@ changelog:
    - num: 6483
      txt: "Avoid sort if datatable is empty"
 ---
+
+<p>This version has two releases (<strong>UR</strong> and <strong>UR2</strong>). The second release
+has the fix to <code>NumberFormatException</code> in <code>DataTable.queueEvent</code> when rows are
+expanded or collapsed in DataTable.</p>
 

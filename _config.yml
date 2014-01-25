@@ -13,12 +13,12 @@ releases:
   - version:   4.0.6
     revision:  10498
     date_time: 2014-01-06 12:11:36 -0000
-    suffix:    "UR"
+    suffix:    "UR2"
 
   - version:   3.5.22
     revision:  10498
     date_time: 2014-01-06 11:40:08 -0000
-    suffix:    "UR"
+    suffix:    "UR2"
 
   - version:   4.0.5
     revision:  10349

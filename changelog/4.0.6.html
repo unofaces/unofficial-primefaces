@@ -23,6 +23,8 @@ changelog:
      txt: "LazyLoad call may fail due to WebSphere bug"
    - num: 6465
      txt: "Client Side Validation - p:sinner unhighlight doesn't work"
+   - num: 0
+     txt: "RowExpansion doesn't pass ajax params <span class=\"label\">UR2</span>"
 
   enhancements:
    - num: 6275
@@ -36,4 +38,8 @@ changelog:
    - num: 6278
      txt: "Dialog Framework - Add closable option"
 ---
+
+<p>This version has two releases (<strong>UR</strong> and <strong>UR2</strong>). The second release
+has the fix to <code>NumberFormatException</code> in <code>DataTable.queueEvent</code> when rows are
+expanded or collapsed in DataTable.</p>
 
