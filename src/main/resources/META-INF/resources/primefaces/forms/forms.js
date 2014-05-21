@@ -721,7 +721,7 @@ PrimeFaces.widget.SelectOneMenu = PrimeFaces.widget.DeferredWidget.extend({
     bindKeyEvents: function() {
         var $this = this;
 
-        this.focusInput.on('keydown.ui-selectonemenu', function(e) {
+        this.focusInput.on('keyup.ui-selectonemenu', function(e) {
             var keyCode = $.ui.keyCode,
             key = e.which;
 
@@ -750,24 +750,24 @@ PrimeFaces.widget.SelectOneMenu = PrimeFaces.widget.DeferredWidget.extend({
                 break;
 
                 default:
-                    var k = String.fromCharCode((96 <= key && key <= 105)? key-48 : key).toLowerCase(),
-                    currentItem = $this.items.filter('.ui-state-highlight');
+                    var text = $(this).val(),
+                    matchedOptions = null;
 
-                    //Search items forward from current to end and on no result, search from start until current
-                    var highlightItem = $this.search(k, currentItem.index() + 1, $this.options.length);
-                    if(!highlightItem) {
-                        highlightItem = $this.search(k, 0, currentItem.index());
+                    clearTimeout(this.searchTimer);
+                                        
+                    matchedOptions = $this.options.filter(function() {
+                        return $(this).text().toLowerCase().indexOf(text.toLowerCase()) === 0;
+                    });
+                    
+                    if(matchedOptions.length) {
+                        var highlightItem = $this.items.eq(matchedOptions.index());
+                        $this.highlightItem(highlightItem);
+                        PrimeFaces.scrollInView($this.itemsWrapper, highlightItem);
                     }
-
-                    if(highlightItem) {
-                        if($this.panel.is(':hidden')) {
-                            $this.selectItem(highlightItem);
-                        }
-                        else {
-                            $this.highlightItem(highlightItem);
-                            PrimeFaces.scrollInView($this.itemsWrapper, highlightItem);
-                        }
-                    }
+                    
+                    this.searchTimer = setTimeout(function(){
+                        $this.focusInput.val('');
+                    }, 1000);
 
                 break;
             }
@@ -891,18 +891,6 @@ PrimeFaces.widget.SelectOneMenu = PrimeFaces.widget.DeferredWidget.extend({
         if(this.panel.is(':visible')) {
             this.selectItem(this.getActiveItem());
         }
-    },
-
-    search: function(text, start, end) {
-        for(var i = start; i  < end; i++) {
-            var option = this.options.eq(i);
-
-            if(option.text().toLowerCase().indexOf(text) === 0) {
-                return this.items.eq(i);
-            }
-        }
-
-        return null;
     },
 
     show: function() {
