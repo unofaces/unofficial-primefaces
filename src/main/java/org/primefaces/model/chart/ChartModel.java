@@ -20,9 +20,11 @@ public class ChartModel {
     private String title;
     private boolean shadow = true;
     private String seriesColors;
+    private String negativeSeriesColors;
     private String legendPosition;
     private int legendCols;
     private int legendRows;
+    private LegendPlacement legendPlacement;
     private boolean mouseoverHighlight = true;
     private String extender;
 
@@ -50,6 +52,14 @@ public class ChartModel {
         this.seriesColors = seriesColors;
     }
 
+    public String getNegativeSeriesColors() {
+        return negativeSeriesColors;
+    }
+
+    public void setNegativeSeriesColors(String negativeSeriesColors) {
+        this.negativeSeriesColors = negativeSeriesColors;
+    }
+    
     public String getLegendPosition() {
         return legendPosition;
     }
@@ -74,6 +84,14 @@ public class ChartModel {
         this.legendRows = legendRows;
     }
 
+    public LegendPlacement getLegendPlacement() {
+        return legendPlacement;
+    }
+
+    public void setLegendPlacement(LegendPlacement legendPlacement) {
+        this.legendPlacement = legendPlacement;
+    }
+    
     public boolean isMouseoverHighlight() {
         return mouseoverHighlight;
     }

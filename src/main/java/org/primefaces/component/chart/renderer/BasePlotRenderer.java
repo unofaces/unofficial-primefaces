@@ -20,6 +20,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import org.primefaces.component.chart.Chart;
 import org.primefaces.model.chart.ChartModel;
+import org.primefaces.model.chart.LegendPlacement;
 
 public abstract class BasePlotRenderer {
     
@@ -36,6 +37,7 @@ public abstract class BasePlotRenderer {
         String legendPosition = model.getLegendPosition();
         String title = model.getTitle();
         String seriesColors = model.getSeriesColors();
+        String negativeSeriesColors = model.getNegativeSeriesColors();
         String extender = model.getExtender();
 
         if(title != null)
@@ -47,7 +49,11 @@ public abstract class BasePlotRenderer {
         if(seriesColors != null)
             writer.write(",seriesColors:['#" +  seriesColors.replaceAll("[ ]*,[ ]*", "','#") + "']");
         
+        if(negativeSeriesColors != null)
+            writer.write(",negativeSeriesColors:['#" +  negativeSeriesColors.replaceAll("[ ]*,[ ]*", "','#") + "']");
+        
         if(legendPosition != null) {
+            LegendPlacement legendPlacement = model.getLegendPlacement();
             writer.write(",legendPosition:'" + legendPosition + "'");
             
             if(model.getLegendCols() != 0)
@@ -55,6 +61,9 @@ public abstract class BasePlotRenderer {
             
             if(model.getLegendRows() != 0)
                 writer.write(",legendRows:" + model.getLegendRows());
+            
+            if(legendPlacement != null)
+                writer.write(",legendPlacement:'" + legendPlacement + "'");
         }
         
         if(!model.isMouseoverHighlight())
