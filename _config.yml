@@ -10,6 +10,11 @@ analytics:
 
 releases:
   unofficials:
+  - version:   5.0.1
+    revision:  11452
+    date_time: 2014-05-26 17:20:14 -0000
+    suffix:    "UR"
+
   - version:   4.0.6
     revision:  10498
     date_time: 2014-01-06 12:11:36 -0000
