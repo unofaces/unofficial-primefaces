@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.faces.application.Resource;
-import javax.faces.application.ResourceHandler;
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIParameter;
@@ -452,11 +451,9 @@ public abstract class CoreRenderer extends Renderer {
                         ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, (UIComponent) component, eventName, clientId, params);
                         String script = behavior.getScript(cbc);
 
-                        if(script != null)
+                        if(script != null) {
                             writer.write(script);
-                        
-                        if(behaviorIter.hasNext())
-                            writer.write(",");
+                        }
                     }
                     writer.write("}");
                     written = true;
