@@ -70,10 +70,11 @@ PrimeFaces.widget.OverlayPanel = PrimeFaces.widget.BaseWidget.extend({
     },
     
     toggle: function() {
-        if(this.cfg.visible)
-            this.hide();
-        else
+        if(this.cfg.target.is(':visible')){
             this.show();
+        } else {
+            this.hide();
+        }
     },
     
     loadContents: function() {
