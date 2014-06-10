@@ -1925,7 +1925,7 @@ PrimeFaces.widget.SelectCheckboxMenu = PrimeFaces.widget.BaseWidget.extend({
         this.triggers = this.jq.find('.ui-selectcheckboxmenu-trigger, .ui-selectcheckboxmenu-label');
         this.disabled = this.jq.hasClass('ui-state-disabled');
         this.inputs = this.jq.find(':checkbox');
-        this.panelId = this.id + '_panel';
+        this.panelId = this.jqId + '_panel';
         this.keyboardTarget = $(this.jqId + '_focus');
 
         if(!this.disabled) {
