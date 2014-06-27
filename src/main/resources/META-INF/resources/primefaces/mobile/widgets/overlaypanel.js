@@ -5,6 +5,7 @@ PrimeFaces.widget.OverlayPanel = PrimeFaces.widget.BaseWidget.extend({
     
     init: function(cfg) {
         this._super(cfg);
+        this.cfg.visible = false;
         this.cfg.showEvent = this.cfg.showEvent||'click.overlaypanel';
         this.cfg.hideEvent = this.cfg.hideEvent||'click.overlaypanel';
         this.cfg.target = this.cfg.targetId ? $(PrimeFaces.escapeClientId(this.cfg.targetId)): null;
@@ -52,6 +53,7 @@ PrimeFaces.widget.OverlayPanel = PrimeFaces.widget.BaseWidget.extend({
     
     _show: function() {
         this.jq.panel('open');
+        this.cfg.visible = true;
         
         if(this.cfg.onShow) {
             this.cfg.onShow.call(this);
@@ -60,6 +62,7 @@ PrimeFaces.widget.OverlayPanel = PrimeFaces.widget.BaseWidget.extend({
     
     hide: function() {
         this.jq.panel('close');
+        this.cfg.visible = false;
         
         if(this.cfg.onHide) {
             this.cfg.onHide.call(this);
@@ -67,7 +70,7 @@ PrimeFaces.widget.OverlayPanel = PrimeFaces.widget.BaseWidget.extend({
     },
     
     toggle: function() {
-        if(this.isVisible())
+        if(this.cfg.visible)
             this.hide();
         else
             this.show();
@@ -99,9 +102,5 @@ PrimeFaces.widget.OverlayPanel = PrimeFaces.widget.BaseWidget.extend({
         };
 
         PrimeFaces.ajax.Request.handle(options);
-    },
-    
-    isVisible: function() {
-        return this.jq.hasClass('ui-panel-open');
     }
 });
