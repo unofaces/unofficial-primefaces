@@ -1,11 +1,11 @@
 /*
  * Copyright 2009-2014 PrimeTek.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under PrimeFaces Commercial License, Version 1.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.primefaces.org/elite/license.xhtml
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,16 +16,28 @@
 package org.primefaces.component.calendar;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-
+import java.util.List;
 import javax.faces.FacesException;
 import javax.faces.context.FacesContext;
+import org.primefaces.component.calendar.converter.PatternConverter;
+import org.primefaces.component.calendar.converter.DatePatternConverter;
+import org.primefaces.component.calendar.converter.TimePatternConverter;
 
 /**
  * Utility class for calendar component
  */
 public class CalendarUtils {
 
+    private final static List<PatternConverter> PATTERN_CONVERTERS;
+    
+    static {
+        PATTERN_CONVERTERS = new ArrayList<PatternConverter>();
+        PATTERN_CONVERTERS.add(new TimePatternConverter());
+        PATTERN_CONVERTERS.add(new DatePatternConverter());
+    }
+    
 	public static String getValueAsString(FacesContext context, Calendar calendar) {
 		Object submittedValue = calendar.getSubmittedValue();
 		if(submittedValue != null) {
@@ -95,27 +107,17 @@ public class CalendarUtils {
 	 * @return converted pattern
 	 */
 	public static String convertPattern(String pattern) {
-		if(pattern == null)
+		if(pattern == null) {
 			return null;
+        }
 		else {
-			//year
-			pattern = pattern.replaceAll("yy", "y");
-			
-			//month
-			if(pattern.indexOf("MMM") != -1)
-				pattern = pattern.replaceAll("MMM", "M");
-			else
-				pattern = pattern.replaceAll("M", "m");
-			
-			//day of week
-			pattern = pattern.replaceAll("EEE", "D");
-
-            //time
-            if(pattern.indexOf("H") != -1 || pattern.indexOf("h") != -1) {
-                pattern = pattern.replaceAll("a", "TT");
+            String convertedPattern = pattern;
+            for (PatternConverter converter : PATTERN_CONVERTERS) {
+                convertedPattern = converter.convert(convertedPattern);
             }
-			
-			return pattern;
+
+            return convertedPattern;
 		}
 	}
+    
 }
