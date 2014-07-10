@@ -1945,7 +1945,7 @@ PrimeFaces.widget.SelectCheckboxMenu = PrimeFaces.widget.BaseWidget.extend({
     },
 
     refresh: function(cfg) {
-        $(this.panelId).remove();
+        $(PrimeFaces.escapeClientId(this.panelId)).remove();
 
         this.init(cfg);
     },
@@ -2755,6 +2755,12 @@ PrimeFaces.widget.SplitButton = PrimeFaces.widget.BaseWidget.extend({
         //pfs metadata
         this.button.data(PrimeFaces.CLIENT_ID_DATA, this.id);
         this.menuButton.data(PrimeFaces.CLIENT_ID_DATA, this.id);
+    },
+
+    refresh: function(cfg) {
+        this.menu.remove();
+
+        this.init(cfg);
     },
 
     bindEvents: function() {
