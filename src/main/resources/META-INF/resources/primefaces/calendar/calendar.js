@@ -2,10 +2,10 @@
  * PrimeFaces Calendar Widget
  */
 PrimeFaces.widget.Calendar = PrimeFaces.widget.BaseWidget.extend({
-    
+
     init: function(cfg) {
         this._super(cfg);
-        
+
         this.input = $(this.jqId + '_input');
         this.jqEl = this.cfg.popup ? this.input : $(this.jqId + '_inline');
         var _self = this;
@@ -13,11 +13,12 @@ PrimeFaces.widget.Calendar = PrimeFaces.widget.BaseWidget.extend({
         //i18n and l7n
         this.configureLocale();
 
-        //Select listener
+        //events
         this.bindDateSelectListener();
+        this.bindViewChangeListener();
 
         //disabled dates
-        this.cfg.beforeShowDay = function(date) { 
+        this.cfg.beforeShowDay = function(date) {
             if(_self.cfg.preShowDay) {
                 return _self.cfg.preShowDay(date);
             }
@@ -50,6 +51,16 @@ PrimeFaces.widget.Calendar = PrimeFaces.widget.BaseWidget.extend({
             };
         }
 
+        // touch support - prevents keyboard popup
+        if (!this.input.attr("readonly") && this.cfg.showOn && this.cfg.showOn === 'button') {
+            this.cfg.beforeShow = function(input, inst) {
+                $(this).attr("readonly", true);
+            };
+            this.cfg.onClose = function(dateText, inst) {
+                $(this).attr("readonly", false);
+            };
+        }
+
         //Initialize calendar
         if(!this.cfg.disabled) {
             if(hasTimePicker) {
@@ -77,28 +88,28 @@ PrimeFaces.widget.Calendar = PrimeFaces.widget.BaseWidget.extend({
             PrimeFaces.skinButton(triggerButton);
             $('#ui-datepicker-div').addClass('ui-shadow');
         }
-        
+
         //mark target and descandants of target as a trigger for a primefaces overlay
         if(this.cfg.popup) {
             this.jq.data('primefaces-overlay-target', this.id).find('*').data('primefaces-overlay-target', this.id);
         }
-        
+
         //pfs metadata
         this.input.data(PrimeFaces.CLIENT_ID_DATA, this.id);
-        
+
         if (this.cfg.mask) {
             this.input.mask(this.cfg.mask);
         }
     },
-        
+
     refresh: function(cfg) {
         if(cfg.popup && $.datepicker._lastInput && (cfg.id + '_input') === $.datepicker._lastInput.id) {
             $.datepicker._hideDatepicker();
         }
-        
+
         this.init(cfg);
     },
-    
+
     configureLocale: function() {
         var localeSettings = PrimeFaces.locales[this.cfg.locale];
 
@@ -108,7 +119,7 @@ PrimeFaces.widget.Calendar = PrimeFaces.widget.BaseWidget.extend({
             }
         }
     },
-    
+
     bindDateSelectListener: function() {
         var _self = this;
 
@@ -124,7 +135,7 @@ PrimeFaces.widget.Calendar = PrimeFaces.widget.BaseWidget.extend({
             }
         };
     },
-    
+
     fireDateSelectEvent: function() {
         if(this.cfg.behaviors) {
             var dateSelectBehavior = this.cfg.behaviors['dateSelect'];
@@ -134,7 +145,33 @@ PrimeFaces.widget.Calendar = PrimeFaces.widget.BaseWidget.extend({
             }
         }
     },
-    
+
+    bindViewChangeListener: function() {
+        if(this.hasBehavior('viewChange')) {
+            var $this = this;
+            this.cfg.onChangeMonthYear = function(month, year) {
+                $this.fireViewChangeEvent(month, year);
+            };
+        }
+    },
+
+    fireViewChangeEvent: function(month, year) {
+        if(this.cfg.behaviors) {
+            var viewChangeBehavior = this.cfg.behaviors['viewChange'];
+
+            if(viewChangeBehavior) {
+                var ext = {
+                        params: [
+                            {name: this.id + '_month', value: month},
+                            {name: this.id + '_year', value: year}
+                        ]
+                };
+
+                viewChangeBehavior.call(this, ext);
+            }
+        }
+    },
+
     configureTimePicker: function() {
         var pattern = this.cfg.dateFormat,
         timeSeparatorIndex = pattern.toLowerCase().indexOf('h');
@@ -151,39 +188,47 @@ PrimeFaces.widget.Calendar = PrimeFaces.widget.BaseWidget.extend({
         if(this.cfg.timeFormat.indexOf('TT') != -1) {
             this.cfg.ampm = true;
         }
-        
+
         //restrains
         if(this.cfg.minDate) {
             this.cfg.minDate = $.datepicker.parseDateTime(this.cfg.dateFormat, this.cfg.timeFormat, this.cfg.minDate, {}, {});
         }
-        
+
         if(this.cfg.maxDate) {
             this.cfg.maxDate = $.datepicker.parseDateTime(this.cfg.dateFormat, this.cfg.timeFormat, this.cfg.maxDate, {}, {});
         }
-        
+
         if(!this.cfg.showButtonPanel) {
             this.cfg.showButtonPanel = false;
         }
     },
-    
+
     hasTimePicker: function() {
         return this.cfg.dateFormat.toLowerCase().indexOf('h') != -1;
     },
-    
+
     setDate: function(date) {
         this.jqEl.datetimepicker('setDate', date);
     },
-    
+
     getDate: function() {
         return this.jqEl.datetimepicker('getDate');
     },
-    
+
     enable: function() {
         this.jqEl.datetimepicker('enable');
     },
-    
+
     disable: function() {
         this.jqEl.datetimepicker('disable');
+    },
+
+    hasBehavior: function(event) {
+        if(this.cfg.behaviors) {
+            return this.cfg.behaviors[event] !== undefined;
+        }
+
+        return false;
     }
-    
+
 });
