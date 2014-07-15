@@ -32,16 +32,13 @@ public class ComponentMetadataTransformerListener implements SystemEventListener
         try {
             if (event instanceof PostAddToViewEvent) {
                 PostAddToViewEvent postAddToViewEvent = (PostAddToViewEvent) event;
-                
-                FacesContext context = FacesContext.getCurrentInstance();
 
-                if (!context.isPostback()) {
-                    RequestContext requestContext = RequestContext.getCurrentInstance();
-                    ConfigContainer config = requestContext.getApplicationContext().getConfig();
-                    
-                    if (config.isTransformMetadataEnabled() && config.isBeanValidationAvailable()) {
-                        BeanValidationComponentMetadataTransformer.getInstance().transform(context, requestContext, postAddToViewEvent.getComponent());
-                    }
+                FacesContext context = FacesContext.getCurrentInstance();
+                RequestContext requestContext = RequestContext.getCurrentInstance();
+                ConfigContainer config = requestContext.getApplicationContext().getConfig();
+
+                if (config.isTransformMetadataEnabled() && config.isBeanValidationAvailable()) {
+                    BeanValidationComponentMetadataTransformer.getInstance().transform(context, requestContext, postAddToViewEvent.getComponent());
                 }
             }
         }
