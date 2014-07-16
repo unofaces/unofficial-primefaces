@@ -390,6 +390,9 @@ import org.primefaces.util.SharedStringBuilder;
             
             List<?> data = null;
             
+			// #7176
+			calculateFirst();
+			
             if(this.isMultiSort()) {
                 data = lazyModel.load(getFirst(), getRows(), getMultiSortMeta(), getFilters());
             }
@@ -684,10 +687,16 @@ import org.primefaces.util.SharedStringBuilder;
     protected void addToSelectedRowKeys(Object object, Map<String,Object> map, String var, boolean hasRowKey) {
         if(hasRowKey) {
             map.put(var, object);
-            this.selectedRowKeys.add(this.getRowKey());
+            Object rowKey = this.getRowKey();
+            if (rowKey != null) {
+                this.selectedRowKeys.add(rowKey);
+            }
         }
         else {
-            this.selectedRowKeys.add(this.getRowKeyFromModel(object));
+            Object rowKey = this.getRowKeyFromModel(object);
+            if (rowKey != null) {
+                this.selectedRowKeys.add(rowKey);
+            }
         }
     }
 
@@ -978,11 +987,22 @@ import org.primefaces.util.SharedStringBuilder;
     
     public void processEvent(ComponentSystemEvent event) throws AbortProcessingException {
         super.processEvent(event);
-        if(event instanceof PostRestoreStateEvent && (this == event.getComponent())) {
+        if(!this.isLazy() && event instanceof PostRestoreStateEvent && (this == event.getComponent())) {
             Object filteredValue = this.getFilteredValue();
             if(filteredValue != null) {
                 this.setValue(filteredValue);
             }
+        }
+    }
+    
+    public void updateFilteredValue(FacesContext context,  List<?> value) {
+        ValueExpression ve = this.getValueExpression("filteredValue");
+        
+        if(ve != null) {
+            ve.setValue(context.getELContext(), value);
+        }
+        else {            
+            this.setFilteredValue(value);
         }
     }
     
