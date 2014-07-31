@@ -140,7 +140,7 @@ public class FilterFeature implements DataTableFeature {
                 Object filterValue = filterMeta.getFilterValue();
                 UIColumn column = filterMeta.getColumn();
                 MethodExpression filterFunction = column.getFilterFunction();
-                ValueExpression filterByVE = table.getValueExpression("filterBy");
+                ValueExpression filterByVE = filterMeta.getFilterByVE();
                 
                 if(column instanceof DynamicColumn) {
                     ((DynamicColumn) column).applyStatelessModel();
@@ -247,9 +247,10 @@ public class FilterFeature implements DataTableFeature {
 
                         if(column.isRendered()) {
                             ValueExpression columnFilterByVE = column.getValueExpression("filterBy");
+                            Object filterByProperty = column.getFilterBy();
                             
-                            if(columnFilterByVE != null) {
-                                ValueExpression filterByVE = columnFilterByVE;
+                            if(columnFilterByVE != null || filterByProperty != null) {
+                                ValueExpression filterByVE = (columnFilterByVE != null) ? columnFilterByVE : createFilterByVE(context, var, filterByProperty);
                                 UIComponent filterFacet = column.getFacet("filter");
                                 Object filterValue;
                                 
@@ -268,19 +269,23 @@ public class FilterFeature implements DataTableFeature {
         else {
             for(UIColumn column : table.getColumns()) {
                 ValueExpression columnFilterByVE = column.getValueExpression("filterBy");
+                Object filterByProperty = column.getFilterBy();
                 
-                if (columnFilterByVE != null) {
-                    UIComponent filterFacet = column.getFacet("filter");                    
-                    ValueExpression filterByVE = columnFilterByVE;
+                if (columnFilterByVE != null || filterByProperty != null) {
+                    UIComponent filterFacet = column.getFacet("filter");
                     Object filterValue = null;
+                    ValueExpression filterByVE = null;
                     String filterId = null;
                     
                     if(column instanceof Column) {
+                        filterByVE = (columnFilterByVE != null) ? columnFilterByVE : createFilterByVE(context, var, filterByProperty);
                         filterId = column.getClientId(context) + separator + "filter";
                     }
                     else if(column instanceof DynamicColumn) {
                         DynamicColumn dynamicColumn = (DynamicColumn) column;
                         dynamicColumn.applyStatelessModel();
+                        filterByProperty = column.getFilterBy();
+                        filterByVE = (filterByProperty == null) ? columnFilterByVE : createFilterByVE(context, var, filterByProperty);
                         filterId = dynamicColumn.getContainerClientId(context) + separator + "filter";
                         dynamicColumn.cleanStatelessModel();
                     }
@@ -324,7 +329,12 @@ public class FilterFeature implements DataTableFeature {
 
         return filterConstraint;
     }
-        
+    
+    private ValueExpression createFilterByVE(FacesContext context, String var, Object filterBy) {
+        ELContext elContext = context.getELContext();
+        return context.getApplication().getExpressionFactory().createValueExpression(elContext, "#{" + var + "." + filterBy + "}", Object.class);
+    }
+    
     private class FilterMeta {
         
         private UIColumn column;
