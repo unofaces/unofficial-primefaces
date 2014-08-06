@@ -44,6 +44,7 @@ import org.primefaces.event.ReorderEvent;
 import org.primefaces.model.Visibility;
 import org.primefaces.model.SortOrder;
 import org.primefaces.model.SelectableDataModel;
+import org.primefaces.model.SelectableDataModelWrapper;
 import java.lang.reflect.Array;
 import javax.el.ELContext;
 import javax.faces.model.DataModel;
@@ -990,7 +991,7 @@ import org.primefaces.util.SharedStringBuilder;
         if(!this.isLazy() && event instanceof PostRestoreStateEvent && (this == event.getComponent())) {
             Object filteredValue = this.getFilteredValue();
             if(filteredValue != null) {
-                this.setValue(filteredValue);
+                this.updateValue(filteredValue);
             }
         }
     }
@@ -1005,4 +1006,21 @@ import org.primefaces.util.SharedStringBuilder;
             this.setFilteredValue(value);
         }
     }
+    
+    public void updateValue(Object value) {
+        Object originalValue = this.getValue();
+        if(originalValue instanceof SelectableDataModel)
+            this.setValue(new SelectableDataModelWrapper((SelectableDataModel) originalValue, value));
+        else
+            this.setValue(value);
+    }
+    
+    @Override
+    public Object saveState(FacesContext context) {
+        if(this.isFilteringEnabled()) {
+            this.setValue(null);
+        }
+    
+        return super.saveState(context);
+    } 
     

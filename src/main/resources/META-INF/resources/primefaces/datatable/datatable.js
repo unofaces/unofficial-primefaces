@@ -717,6 +717,10 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.DeferredWidget.extend({
         this.scrollStateHolder.val(scrollState);
     },
     
+    clearScrollState: function() {
+        this.scrollStateHolder.val('0,0');
+    },
+    
     fixColumnWidths: function() {
         var $this = this;
         
@@ -756,6 +760,12 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.DeferredWidget.extend({
      * Loads rows on-the-fly when scrolling live
      */
     loadLiveRows: function() {
+        if(this.liveScrollActive) {
+            return;
+        }
+        
+        this.liveScrollActive = true;
+        
         var $this = this,
         options = {
             source: this.id,
@@ -779,6 +789,8 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.DeferredWidget.extend({
                         if(this.scrollOffset === this.cfg.scrollLimit) {
                             this.shouldLiveScroll = false;
                         }
+                        
+                        this.liveScrollActive = false;
                     }
                 });
 
