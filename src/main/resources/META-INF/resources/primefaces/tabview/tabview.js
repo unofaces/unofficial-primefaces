@@ -143,7 +143,7 @@ PrimeFaces.widget.TabView = PrimeFaces.widget.BaseWidget.extend({
         
     initScrolling: function() {
         if(this.jq.is(':visible')) {
-            var overflown = (this.lastTab.position().left - this.firstTab.position().left) > this.navscroller.innerWidth();
+            var overflown = ((this.lastTab.position().left + this.lastTab.width()) - this.firstTab.position().left) > this.navscroller.innerWidth();
             if(overflown) {
                 this.navscroller.css('padding-left', '18px');
                 this.navcrollerLeft.show();
@@ -177,7 +177,7 @@ PrimeFaces.widget.TabView = PrimeFaces.widget.BaseWidget.extend({
                     
                     if((lastTabBoundry + step) < viewportWidth)
                         $this.disableScrollerButton($this.navcrollerRight);
-                    else if($this.navcrollerLeft.hasClass('ui-state-disabled'))
+                    if($this.navcrollerLeft.hasClass('ui-state-disabled'))
                         $this.enableScrollerButton($this.navcrollerLeft);
                 });
         }
@@ -187,8 +187,8 @@ PrimeFaces.widget.TabView = PrimeFaces.widget.BaseWidget.extend({
                     $this.saveScrollState(newMarginLeft);
                     
                     if(newMarginLeft === 0)
-                       $this.disableScrollerButton($this.navcrollerLeft);
-                    else if($this.navcrollerRight.hasClass('ui-state-disabled'))
+                        $this.disableScrollerButton($this.navcrollerLeft);
+                    if($this.navcrollerRight.hasClass('ui-state-disabled'))
                         $this.enableScrollerButton($this.navcrollerRight);
                 });        
             }           
