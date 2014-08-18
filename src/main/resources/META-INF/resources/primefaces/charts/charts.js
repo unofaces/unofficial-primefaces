@@ -22549,9 +22549,11 @@ PrimeFaces.widget.ChartUtils = {
                         intervals: chart.cfg.intervals,
                         intervalColors: chart.cfg.seriesColors,
                         label: chart.cfg.gaugeLabel,
+                        labelPosition: chart.cfg.gaugeLabelPosition,
                         showTickLabels: chart.cfg.showTickLabels,
                         ticks: chart.cfg.ticks,
                         labelHeightAdjust: chart.cfg.labelHeightAdjust,
+                        intervalInnerRadius: chart.cfg.intervalInnerRadius,
                         intervalOuterRadius: chart.cfg.intervalOuterRadius,
                         min: chart.cfg.min,
                         max: chart.cfg.max
