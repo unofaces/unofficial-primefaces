@@ -594,13 +594,13 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.DeferredWidget.extend({
         scrollBarWidth = this.getScrollbarWidth() + 'px';
         
         if(this.cfg.scrollHeight) {
+            if(this.percentageScrollHeight) {
+                this.adjustScrollHeight();
+            }
+            
             if(this.hasVerticalOverflow()) {
                 this.scrollHeaderBox.css('margin-right', scrollBarWidth);
                 this.scrollFooterBox.css('margin-right', scrollBarWidth);
-            }
-            
-            if(this.percentageScrollHeight) {
-                this.adjustScrollHeight();
             }
         }
                 
@@ -612,6 +612,8 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.DeferredWidget.extend({
             else
                 this.setScrollWidth(parseInt(this.cfg.scrollWidth));
         }
+        
+        this.cloneHead();
               
         this.restoreScrollState();
 
@@ -2445,17 +2447,17 @@ PrimeFaces.widget.FrozenDataTable = PrimeFaces.widget.DataTable.extend({
         scrollBarWidth = this.getScrollbarWidth() + 'px';
 
         if(this.cfg.scrollHeight) {
+            if(this.percentageScrollHeight) {
+                this.adjustScrollHeight();
+            }
+            
             if(this.hasVerticalOverflow()) {
                 this.scrollHeaderBox.css('margin-right', scrollBarWidth);
                 this.scrollFooterBox.css('margin-right', scrollBarWidth);
             }
-            
-            if(this.percentageScrollHeight) {
-                this.adjustScrollHeight();
-            }
         }
 
-        this.fixColumnWidths();
+        this.fixColumnWidths();      
 
         if(this.cfg.scrollWidth) {
             if(this.percentageScrollWidth)
@@ -2465,13 +2467,15 @@ PrimeFaces.widget.FrozenDataTable = PrimeFaces.widget.DataTable.extend({
             
             if(this.hasVerticalOverflow()) {
                 if(PrimeFaces.browser.webkit === true)
-                    this.frozenBodyTable.css('margin-bottom', '16px');
+                    this.frozenBody.append('<div style="height:' + scrollBarWidth + ';border:1px solid transparent"></div>');
                 else if(PrimeFaces.isIE(8))
                     this.frozenBody.append('<div style="height:' + scrollBarWidth + '"></div>');
                 else
                     this.frozenBodyTable.css('margin-bottom', scrollBarWidth);
             }
         }
+        
+        this.cloneHead();  
         
         //match headers
         var frozenTheadHeight = this.frozenThead.height(),
