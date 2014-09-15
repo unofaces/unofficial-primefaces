@@ -56,7 +56,6 @@ public class DialogNavigationHandler extends ConfigurableNavigationHandler {
             Map<String,Object> options = (Map<String,Object>) attrs.get(Constants.DIALOG_FRAMEWORK.OPTIONS);
             
             StringBuilder sb = new StringBuilder();
-            
             String sourceComponentId = (String) attrs.get(Constants.DIALOG_FRAMEWORK.SOURCE_COMPONENT);
             String sourceWidget = (String) attrs.get(Constants.DIALOG_FRAMEWORK.SOURCE_WIDGET);
             String pfdlgcid = UUID.randomUUID().toString();
