@@ -16,9 +16,6 @@
 package org.primefaces.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 public class CheckboxTreeNode implements TreeNode, Serializable {
@@ -137,6 +134,7 @@ public class CheckboxTreeNode implements TreeNode, Serializable {
     
     protected void propagateSelectionDown(boolean value) {
         this.selected = value;
+        this.partialSelected = false;
         
         for(TreeNode child : children) {
             ((CheckboxTreeNode) child).propagateSelectionDown(value);
@@ -145,6 +143,7 @@ public class CheckboxTreeNode implements TreeNode, Serializable {
     
     protected void propagateSelectionUp() {
         boolean allChildrenSelected = true;
+        this.partialSelected = false;
         
         for(int i=0; i < this.getChildren().size(); i++) {  
             boolean childSelected = this.getChildren().get(i).isSelected();
@@ -155,6 +154,7 @@ public class CheckboxTreeNode implements TreeNode, Serializable {
         
         if(allChildrenSelected) {
             this.selected = true;
+            this.partialSelected = false;
         }
         
         if(this.getParent() != null) {
