@@ -317,14 +317,16 @@ PrimeFaces.widget.TieredMenu = PrimeFaces.widget.Menu.extend({
     },
     
     showSubmenu: function(menuitem, submenu) {
-        
-        submenu.css({
-            'left': menuitem.outerWidth()
-            ,'top': 0
-            ,'z-index': ++PrimeFaces.zindex
-        });
+        var pos ={
+            my: 'left top',
+            at: 'right top',
+            of: menuitem,
+            collision: 'flipfit'
+        };
 
-        submenu.show();
+        submenu.css('z-index', ++PrimeFaces.zindex)
+            .show()
+            .position(pos);
     },
             
     reset: function() {
