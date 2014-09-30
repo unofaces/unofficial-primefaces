@@ -10,9 +10,9 @@ analytics:
 
 releases:
   unofficials:
-  - version:   5.0.9
-    revision:  11837
-    date_time: 2014-09-17 11:37:22 -0000
+  - version:   5.0.10
+    revision:  11883
+    date_time: 2014-09-30 20:10:44 -0000
     suffix:    "UR"
 
   - version:   5.0.8
