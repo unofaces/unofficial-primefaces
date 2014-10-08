@@ -613,8 +613,6 @@ PrimeFaces.widget.DataTable = PrimeFaces.widget.DeferredWidget.extend({
                 this.setScrollWidth(parseInt(this.cfg.scrollWidth));
         }
         
-        this.cloneHead();
-              
         this.restoreScrollState();
 
         if(this.cfg.liveScroll) {
@@ -2495,8 +2493,6 @@ PrimeFaces.widget.FrozenDataTable = PrimeFaces.widget.DataTable.extend({
                     this.frozenBodyTable.css('margin-bottom', scrollBarWidth);
             }
         }
-        
-        this.cloneHead();  
         
         //match headers
         var frozenTheadHeight = this.frozenThead.height(),
