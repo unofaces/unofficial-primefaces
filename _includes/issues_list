@@ -8,7 +8,14 @@
 {% for issue in issues_list %}
   <li>
     {% if issue.num > 0 %}
-    <a href="{{ site.issue_tracker }}{{ issue.num }}">Issue {{ issue.num }}</a>
+      {% assign issue_tracker = site.issue_tracker %}
+      {% assign issue_num = issue.num %}
+    {% else if issue.num < 0 %}
+      {% assign issue_tracker = site.github_issue_tracker %}
+      {% assign issue_num = issue.num | times:-1 %}
+    {% endif %}
+    {% if issue.num != 0 %}
+      <a href="{{ issue_tracker }}{{ issue_num }}">Issue {{ issue_num }}</a>
     {% endif %}
     {{ issue.txt }}
   </li>
