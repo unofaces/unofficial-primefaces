@@ -49,3 +49,31 @@
 .ui-calendar-inline .ui-input-text {
     display: none;
 }
+
+/** DataTable **/
+.ui-table {
+    table-layout: fixed;
+}
+
+.ui-table th.ui-sortable-column {
+    position: relative;
+}
+
+.ui-table tr.ui-bar-b {
+    border: 0 none;
+    font-weight: normal;
+}
+
+.ui-datatable .ui-paginator .ui-controlgroup {
+    margin: 0;
+    padding: 0.1em 0em;
+    text-align: center;
+}
+
+@media ( max-width: 35em ) {
+    
+    .ui-paginator .ui-paginator-page {
+        display: none;
+    }
+    
+}

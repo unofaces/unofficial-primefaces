@@ -41,6 +41,7 @@ import org.primefaces.event.ColumnResizeEvent;
 import org.primefaces.event.ToggleEvent;
 import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.ReorderEvent;
+import org.primefaces.mobile.event.SwipeEvent;
 import org.primefaces.model.Visibility;
 import org.primefaces.model.SortOrder;
 import org.primefaces.model.SelectableDataModel;
@@ -117,11 +118,21 @@ import org.primefaces.util.SharedStringBuilder;
     public static final String SUMMARY_ROW_CLASS = "ui-datatable-summaryrow ui-widget-header";
     public static final String EDITING_ROW_CLASS = "ui-row-editing";
     public static final String STICKY_HEADER_CLASS = "ui-datatable-sticky";
+    
+    public static final String MOBILE_CONTAINER_CLASS = "ui-datatable ui-shadow";
+    public static final String MOBILE_TABLE_CLASS = "ui-responsive ui-table table-stripe";
+    public static final String MOBILE_COLUMN_HEADER_CLASS = "ui-column-header";
+    public static final String MOBILE_ROW_CLASS = "ui-table-row";
+    public static final String MOBILE_SORT_ICON_CLASS = "ui-sortable-column-icon ui-icon-bars ui-btn-icon-notext ui-btn-right";
+    public static final String MOBILE_SORT_ICON_ASC_CLASS = "ui-sortable-column-icon ui-icon-arrow-u ui-btn-icon-notext ui-btn-right";
+    public static final String MOBILE_SORT_ICON_DESC_CLASS = "ui-sortable-column-icon ui-icon-arrow-d ui-btn-icon-notext ui-btn-right";
+    public static final String MOBILE_SORTED_COLUMN_CLASS = "ui-column-sorted";
+    public static final String MOBILE_CELL_LABEL = "ui-table-cell-label";
 
     private static final Collection<String> EVENT_NAMES = Collections.unmodifiableCollection(Arrays.asList("page","sort","filter", "rowSelect", 
                                                         "rowUnselect", "rowEdit", "rowEditInit", "rowEditCancel", "colResize", "toggleSelect", "colReorder", "contextMenu"
                                                         ,"rowSelectRadio", "rowSelectCheckbox", "rowUnselectCheckbox", "rowDblselect", "rowToggle"
-                                                        ,"cellEdit", "rowReorder"));
+                                                        ,"cellEdit", "rowReorder", "swipeleft","swiperight","tap","taphold"));
 
                                                         
     static Map<DataTableFeatureKey,DataTableFeature> FEATURES;
@@ -323,6 +334,14 @@ import org.primefaces.util.SharedStringBuilder;
                 int toIndex = Integer.parseInt(params.get(clientId + "_toIndex"));
                 
                 wrapperEvent = new ReorderEvent(this, behaviorEvent.getBehavior(), fromIndex, toIndex);
+            }
+            else if(eventName.equals("swipeleft")||eventName.equals("swiperight")) {
+                String rowkey = params.get(clientId + "_rowkey");
+                wrapperEvent = new SwipeEvent(this, behaviorEvent.getBehavior(), this.getRowData(rowkey));
+            }
+            else if(eventName.equals("tap")||eventName.equals("taphold")) {
+                String rowkey = params.get(clientId + "_rowkey");
+                wrapperEvent = new SelectEvent(this, behaviorEvent.getBehavior(), this.getRowData(rowkey));
             }
             
             wrapperEvent.setPhaseId(event.getPhaseId());
@@ -708,11 +727,11 @@ import org.primefaces.util.SharedStringBuilder;
         }
     }
 
-    protected List<Object> getSelectedRowKeys() {
+    public List<Object> getSelectedRowKeys() {
         return selectedRowKeys;
     }
 
-    protected String getSelectedRowKeysAsString() {
+    public String getSelectedRowKeysAsString() {
         StringBuilder builder = SharedStringBuilder.get(SB_GET_SELECTED_ROW_KEYS_AS_STRING);
         for(Iterator<Object> iter = getSelectedRowKeys().iterator(); iter.hasNext();) {
             builder.append(iter.next());
@@ -1079,6 +1098,20 @@ import org.primefaces.util.SharedStringBuilder;
         }
     
         return super.saveState(context);
-    } 
+    }
+    
+    boolean reflow = false;
+    boolean reflowChecked = false;
+    
+    public boolean isReflow() {
+        if(!reflowChecked) {
+            String styleClass = this.getTableStyleClass();
+        
+            reflow = (styleClass != null && styleClass.contains("ui-table-reflow"));
+            reflowChecked = true;
+        }
+        
+        return reflow;
+    }
     
    
