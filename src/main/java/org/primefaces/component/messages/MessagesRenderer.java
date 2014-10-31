@@ -29,7 +29,6 @@ import javax.faces.context.ResponseWriter;
 import org.primefaces.context.RequestContext;
 import org.primefaces.expression.SearchExpressionFacade;
 import org.primefaces.renderkit.UINotificationRenderer;
-import org.primefaces.util.IteratorChain;
 
 public class MessagesRenderer extends UINotificationRenderer {
 
@@ -48,14 +47,14 @@ public class MessagesRenderer extends UINotificationRenderer {
         String _for = uiMessages.getFor();
         Iterator<FacesMessage> messages;
         if(_for != null) {
-            // key case
+        	// key case
             messages = context.getMessages(_for);
 
             // clientId / SearchExpression case
             UIComponent forComponent = SearchExpressionFacade.resolveComponent(
             		context, uiMessages, _for, SearchExpressionFacade.IGNORE_NO_RESULT);
             if (forComponent != null) {
-                messages = new IteratorChain(messages, context.getMessages(forComponent.getClientId(context)));
+            	messages = context.getMessages(forComponent.getClientId(context));
             }
         }
         else {
