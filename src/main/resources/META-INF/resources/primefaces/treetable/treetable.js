@@ -387,7 +387,6 @@ PrimeFaces.widget.TreeTable = PrimeFaces.widget.DeferredWidget.extend({
         var descendants = this.getDescendants(node);
         for(var i = 0; i < descendants.length; i++) {
             var descendant = descendants[i];
-
             if(selected)
                 this.unselectNode(descendant, true);
             else
