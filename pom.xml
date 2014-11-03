@@ -10,8 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.primefaces</groupId>
     <artifactId>primefaces</artifactId>
-		<packaging>jar</packaging>
-    <version>5.0.12-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <version>5.0.12-UR</version>
     <name>primefaces</name>
     <url>http://www.primefaces.org</url>
     
