@@ -45,6 +45,9 @@ PrimeFaces.widget.Dialog = PrimeFaces.widget.BaseWidget.extend({
         if(this.cfg.appendTo) {
         	this.jq.appendTo(PrimeFaces.expressions.SearchExpressionFacade.resolveComponentsAsSelector(this.cfg.appendTo));
         }
+        else if(this.cfg.appendToBody == true){
+        	this.jq.appendTo('body');
+        }
 
         //docking zone
         if($(document.body).children('.ui-dialog-docking-zone').length === 0) {
@@ -72,11 +75,15 @@ PrimeFaces.widget.Dialog = PrimeFaces.widget.BaseWidget.extend({
         
         $(document).off('keydown.dialog_' + cfg.id);
         
+        var jqs = $(this.jqId);
+        
         if(cfg.appendTo) {
-            var jqs = $(this.jqId);
             if(jqs.length > 1) {
             	PrimeFaces.expressions.SearchExpressionFacade.resolveComponentsAsSelector(cfg.appendTo).children(this.jqId).remove();
             }
+        }
+        else if(cfg.appendToBody == true){
+        	$('body').children(this.jqId).remove();
         }
         
         this.init(cfg);
@@ -617,7 +624,7 @@ PrimeFaces.widget.ConfirmDialog = PrimeFaces.widget.Dialog.extend({
         cfg.resizable = false;
         cfg.modal = true;
 
-        if (!cfg.appendTo && cfg.global) {
+        if ((!cfg.appendTo && cfg.global) || cfg.appendToBody == true) {
         	cfg.appendTo = '@(body)';
         }
 
