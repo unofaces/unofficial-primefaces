@@ -243,7 +243,7 @@ public class SplitButtonRenderer extends OutcomeTargetRenderer {
             if(title != null) {
                 writer.writeAttribute("title", title, null);
             }
-            
+            writer.writeAttribute("id", menuitem.getClientId(), null);
             String styleClass = menuitem.getStyleClass();
             styleClass = styleClass == null ? AbstractMenu.MENUITEM_LINK_CLASS : AbstractMenu.MENUITEM_LINK_CLASS + " " + styleClass;
             styleClass = disabled ? styleClass + " ui-state-disabled" : styleClass;
