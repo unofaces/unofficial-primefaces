@@ -1,0 +1,23 @@
+env: 
+  global: 
+    - secure: "BNdOT4yZK0rHQNIFuIgOAIBQZm8foodILr6X02gzfxMuHOfjL8H5FSHZa1rM6H20824RT6QvFNK0fdpWb4SvmPol/24/UF5/iCPZkKnlj+UIkMWP3NxQXbz/NuHj3DHiacZF0syTHUS0ze6SDizdnmtGZU+Caz6ZGP/RwNYdQlo="
+    - secure: "UFrPiYZR+MlmJNqDPKrUDMoEcitj84VC/cX/oIgCGSuc81gNpEylhB64l3kixToEOZP/lmng7bNWx4VxKTgvF37GdCQPbXBlWpgqbsQM3jT+qUZptpMeMiwWUY6g5RjQ/ipuOnwYJ/yfpczMItQ7fSLoeAYNxu/EPiBZIPwqXyM="
+language: java
+notifications:
+  email:
+    recipients:
+      - michael.donovan@danteinc.com
+      - john.gilbert@danteinc.com
+      - jesse.mueller@danteinc.com
+      - peter.myers@danteinc.com
+    on_success: always
+    on_failure: always
+before_script:
+  - echo "web.sourceforge.net ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA2uifHZbNexw6cXbyg1JnzDitL5VhYs0E65Hk/tLAPmcmm5GuiGeUoI/B0eUSNFsbqzwgwrttjnzKMKiGLN5CWVmlN1IXGGAfLYsQwK6wAu7kYFzkqP4jcwc5Jr9UPRpJdYIK733tSEmzab4qc5Oq8izKQKIaxXNe7FgmL15HjSpatFt9w/ot/CHS78FUAr3j3RwekHCm/jhPeqhlMAgC+jUgNJbFt3DlhDaRMa0NYamVzmX8D47rtmBbEDU3ld6AezWBPUR5Lh7ODOwlfVI58NAf/aYNlmvl2TZiauBCTa7OPYSyXJnIPbQXg6YQlDknNCr0K769EjeIlAfY87Z4tw==" >> ~/.ssh/known_hosts
+  - echo -e "Host primefaces.org\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+script:
+  - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then mvn clean deploy --settings settings.xml -Pmvn3; else mvn clean test; fi
+branches:
+  only:
+    - current-release
+    - trunk-snapshot
