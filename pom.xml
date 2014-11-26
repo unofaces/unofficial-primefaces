@@ -53,6 +53,7 @@
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <wagon.ssh.version>1.0-beta-2</wagon.ssh.version>
     </properties>
 	
     <dependencies>
@@ -474,6 +475,14 @@
             </plugin>
  
         </plugins>
+        
+        <extensions> 
+		<extension> 
+			<groupId>org.apache.maven.wagon</groupId> 
+			<artifactId>wagon-ssh</artifactId> 
+			<version>1.0-beta-2</version> 
+		</extension> 
+	</extensions>
 
     </build>
 	<distributionManagement> 
