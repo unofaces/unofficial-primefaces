@@ -747,5 +747,15 @@
                 </plugins>
             </build>
         </profile>
+        <profile> 
+		<id>mvn3</id> 
+		<!--profile used to switch settings that enable the build to run under mvn3--> 
+		<activation> 
+			<activeByDefault>false</activeByDefault> 
+		</activation> 
+		<properties> 
+			<wagon.ssh.version>2.4</wagon.ssh.version> 
+		</properties> 
+	</profile>
     </profiles>
 </project>
