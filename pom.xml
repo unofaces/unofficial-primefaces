@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
-    
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.primefaces</groupId>
     <artifactId>primefaces</artifactId>
@@ -482,6 +476,19 @@
         </plugins>
 
     </build>
+	<distributionManagement> 
+		<repository> 
+			<id>taylor-maven2-repository</id> 
+			<name>Taylor Maven2 Repository</name> 
+			<url>sftp://web.sourceforge.net/home/project-web/taylor/htdocs/maven2</url> 
+		</repository>    
+		<snapshotRepository> 
+			<id>taylor-maven2-snapshot-repository</id> 
+			<name>Taylor Maven2 Snapshot Repository</name> 
+			<url>sftp://web.sourceforge.net/home/project-web/taylor/htdocs/maven2</url> 
+			<uniqueVersion>false</uniqueVersion> 
+		</snapshotRepository>
+	</distributionManagement> 
 
     <profiles>
         <profile>
