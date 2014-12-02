@@ -14,6 +14,7 @@ PrimeFaces.widget.AjaxStatus = PrimeFaces.widget.BaseWidget.extend({
         $this = this;
         
         doc.on('pfAjaxStart', function() {
+            jQuery.active++;
             $this.trigger('start');
         })
         .on('pfAjaxError', function() {
@@ -23,6 +24,7 @@ PrimeFaces.widget.AjaxStatus = PrimeFaces.widget.BaseWidget.extend({
             $this.trigger('success');
         })
         .on('pfAjaxComplete', function() {
+            jQuery.active--;
             $this.trigger('complete');
         });
         
