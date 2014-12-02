@@ -84,13 +84,6 @@
             <description>Alternative to appendToBody. Appends the dialog to the given search expression.</description>
         </attribute>
         <attribute>
-            <name>appendToBody</name>
-            <required>false</required>
-            <type>java.lang.Boolean</type>
-			<defaultValue>false</defaultValue>
-            <description>Uses old appendToBody for primefaces upgrade</description>
-        </attribute>
-        <attribute>
             <name>visible</name>
             <required>false</required>
             <type>java.lang.Boolean</type>
