@@ -1,4 +1,4 @@
-# [PrimeFaces Unofficial](http://primefaces.github.io/)
+# [PrimeFaces Unofficial](http://unofaces.github.io/unofficial-primefaces/)
 [![Build Status](https://buildhive.cloudbees.com/job/primefaces/job/primefaces/badge/icon)](https://buildhive.cloudbees.com/job/primefaces/job/primefaces/)
 
 Unofficial Mirror of PrimeFaces JSF Components
@@ -17,9 +17,9 @@ Downloading unofficial releases with Maven:
 
 ```xml
 <repository>
-  <id>prime-github-repo</id>
+  <id>unofaces-repo</id>
   <name>Unofficial PrimeFaces Maven Repository</name>
-  <url>http://primefaces.github.io/repository</url>
+  <url>http://unofaces.github.io/repository</url>
   <layout>default</layout>
 </repository>
 ```
