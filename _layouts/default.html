@@ -9,14 +9,14 @@
     <meta name="author" content="">
 
     <!-- CSS -->
-    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/assets/css/site.css" rel="stylesheet">
-    <link href="/assets/css/bootstrap-responsive.min.css" rel="stylesheet">
-    {% if page.prettify %}<link href="/assets/css/google-code-prettify.css" rel="stylesheet">{% endif %}
+    <link href="{{ site.baseurl }}/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ site.baseurl }}/assets/css/site.css" rel="stylesheet">
+    <link href="{{ site.baseurl }}/assets/css/bootstrap-responsive.min.css" rel="stylesheet">
+    {% if page.prettify %}<link href="{{ site.baseurl }}/assets/css/google-code-prettify.css" rel="stylesheet">{% endif %}
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-      <script src="/assets/js/html5shiv.js"></script>
+      <script src="{{ site.baseurl }}/assets/js/html5shiv.js"></script>
     <![endif]-->
 
     <script type="text/javascript">
@@ -43,7 +43,7 @@ _gaq.push(['_trackPageview']);
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="brand" href="/">PrimeFaces <span class="label label-important">unofficial</span></a>
+            <a class="brand" href="{{ site.baseurl }}/">PrimeFaces <span class="label label-important">unofficial</span></a>
             <div class="nav-collapse collapse visible-desktop">
               <p class="navbar-text pull-right" style="margin-right:100px" title="Build Status with CloudBees">
                 <a href="https://buildhive.cloudbees.com/job/primefaces/job/primefaces/" class="navbar-link">
@@ -73,9 +73,9 @@ _gaq.push(['_trackPageview']);
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="/assets/js/jquery.min.js"></script>
-    <script src="/assets/js/bootstrap.min.js"></script>
-    {% if page.prettify %}<script src="/assets/js/google-code-prettify.js"></script>{% endif %}
+    <script src="{{ site.baseurl }}/assets/js/jquery.min.js"></script>
+    <script src="{{ site.baseurl }}/assets/js/bootstrap.min.js"></script>
+    {% if page.prettify %}<script src="{{ site.baseurl }}/assets/js/google-code-prettify.js"></script>{% endif %}
 
     {% if page.prettify %}<script type="text/javascript">
 !function ($) {

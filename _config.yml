@@ -1,6 +1,7 @@
 name: PrimeFaces
 pygments: false
 
+baseurl: /unofficial-primefaces
 repo_url: http://primefaces.github.io/repository
 browse_source: http://code.google.com/p/primefaces/source/browse
 issue_tracker: http://code.google.com/p/primefaces/issues/detail?id=
