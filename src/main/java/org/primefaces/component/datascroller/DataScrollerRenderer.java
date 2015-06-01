@@ -25,7 +25,8 @@ import org.primefaces.renderkit.CoreRenderer;
 import org.primefaces.util.WidgetBuilder;
 
 public class DataScrollerRenderer extends CoreRenderer {
-   
+
+    @Override
     public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
         DataScroller ds = (DataScroller) component;
 
@@ -45,7 +46,7 @@ public class DataScrollerRenderer extends CoreRenderer {
             encodeScript(context, ds, chunkSize);
         }
     }
-        
+
     protected void encodeMarkup(FacesContext context, DataScroller ds, int chunkSize) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
         String clientId = ds.getClientId(context);
@@ -106,7 +107,6 @@ public class DataScrollerRenderer extends CoreRenderer {
         writer.endElement("div");
     }
 
-   
     protected void encodeScript(FacesContext context, DataScroller ds, int chunkSize) throws IOException {
         String clientId = ds.getClientId(context);
         String loadEvent = ds.getFacet("loader") == null ? "scroll" : "manual";
@@ -145,7 +145,7 @@ public class DataScrollerRenderer extends CoreRenderer {
         }
         ds.setRowIndex(-1);
     }    
-    
+
     protected void loadLazyData(DataScroller ds, int start, int size) {
         LazyDataModel lazyModel = (LazyDataModel) ds.getValue();
         
