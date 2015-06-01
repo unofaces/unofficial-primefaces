@@ -25,8 +25,7 @@ import org.primefaces.renderkit.CoreRenderer;
 import org.primefaces.util.WidgetBuilder;
 
 public class DataScrollerRenderer extends CoreRenderer {
-
-    @Override
+   
     public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
         DataScroller ds = (DataScroller) component;
 
@@ -46,8 +45,7 @@ public class DataScrollerRenderer extends CoreRenderer {
             encodeScript(context, ds, chunkSize);
         }
     }
-    
-    @Override
+        
     protected void encodeMarkup(FacesContext context, DataScroller ds, int chunkSize) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
         String clientId = ds.getClientId(context);
