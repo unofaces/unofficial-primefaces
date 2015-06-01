@@ -46,7 +46,7 @@ public class DataScrollerRenderer extends CoreRenderer {
             encodeScript(context, ds, chunkSize);
         }
     }
-    
+
     protected void encodeMarkup(FacesContext context, DataScroller ds, int chunkSize) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
         String clientId = ds.getClientId(context);
@@ -55,58 +55,58 @@ public class DataScrollerRenderer extends CoreRenderer {
         UIComponent loader = ds.getFacet("loader");
         String contentCornerClass = null;
         String containerClass = inline ? DataScroller.INLINE_CONTAINER_CLASS : DataScroller.CONTAINER_CLASS;
-        
+
         String style = ds.getStyle();
         String userStyleClass = ds.getStyleClass();
         String styleClass = (userStyleClass == null) ? containerClass : containerClass + " " + userStyleClass;
-        
-        if(ds.isLazy()) {
+        boolean alreadyLoaded = false;
+        if (ds.isLazy()) {
+            alreadyLoaded = true;
             loadLazyData(ds, 0, chunkSize);
         }
-        
+
         writer.startElement("div", ds);
         writer.writeAttribute("id", clientId, null);
         writer.writeAttribute("class", styleClass, null);
-        if(style != null) {
+        if (style != null) {
             writer.writeAttribute("style", styleClass, null);
         }
-        
-        if(header != null && header.isRendered()) {
+
+        if (header != null && header.isRendered()) {
             writer.startElement("div", ds);
             writer.writeAttribute("class", DataScroller.HEADER_CLASS, null);
             header.encodeAll(context);
             writer.endElement("div");
-            
+
             contentCornerClass = "ui-corner-bottom";
-        }
-        else {
+        } else {
             contentCornerClass = "ui-corner-all";
         }
-        
+
         writer.startElement("div", ds);
         writer.writeAttribute("class", DataScroller.CONTENT_CLASS + " " + contentCornerClass, null);
-        if(inline) {
+        if (inline) {
             writer.writeAttribute("style", "height:" + ds.getScrollHeight() + "px", null);
         }
-        
+
         writer.startElement("ul", ds);
         writer.writeAttribute("class", DataScroller.LIST_CLASS, null);
-        loadChunk(context, ds, 0, chunkSize);
+        loadChunk(context, ds, 0, chunkSize, alreadyLoaded);
         ds.setRowIndex(-1);
         writer.endElement("ul");
-        
+
         writer.startElement("div", null);
         writer.writeAttribute("class", DataScroller.LOADER_CLASS, null);
-        if(loader != null && loader.isRendered()) {
+        if (loader != null && loader.isRendered()) {
             loader.encodeAll(context);
-        }     
+        }
         writer.endElement("div");
-        
+
         writer.endElement("div");
-        
+
         writer.endElement("div");
     }
-    
+
     protected void encodeScript(FacesContext context, DataScroller ds, int chunkSize) throws IOException {
         String clientId = ds.getClientId(context);
         String loadEvent = ds.getFacet("loader") == null ? "scroll" : "manual";
@@ -120,28 +120,32 @@ public class DataScrollerRenderer extends CoreRenderer {
             .attr("buffer", ds.getBuffer())
             .finish();
     }
-    
+
     protected void loadChunk(FacesContext context, DataScroller ds, int start, int size) throws IOException {
+        loadChunk(context, ds, start, size, false); // alreadyLoaded is false by default
+    }
+
+    protected void loadChunk(FacesContext context, DataScroller ds, int start, int size, boolean alreadyLoaded) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
-        
-        if(ds.isLazy()) {
+
+        if (ds.isLazy() && !alreadyLoaded) {
             loadLazyData(ds, start, size);
         }
-        
-        for(int i = start; i < (start + size); i++) {
+
+        for (int i = start; i < (start + size); i++) {
             ds.setRowIndex(i);
-            if(!ds.isRowAvailable()) {
+            if (!ds.isRowAvailable()) {
                 break;
             }
-            
+
             writer.startElement("li", null);
             writer.writeAttribute("class", DataScroller.ITEM_CLASS, null);
             renderChildren(context, ds);
             writer.endElement("li");
         }
         ds.setRowIndex(-1);
-    }
-    
+    }    
+
     protected void loadLazyData(DataScroller ds, int start, int size) {
         LazyDataModel lazyModel = (LazyDataModel) ds.getValue();
         
