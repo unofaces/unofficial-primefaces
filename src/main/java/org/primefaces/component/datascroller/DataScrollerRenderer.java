@@ -109,6 +109,20 @@ public class DataScrollerRenderer extends CoreRenderer {
     }
 
    
+    protected void encodeScript(FacesContext context, DataScroller ds, int chunkSize) throws IOException {
+        String clientId = ds.getClientId(context);
+        String loadEvent = ds.getFacet("loader") == null ? "scroll" : "manual";
+        
+        WidgetBuilder wb = getWidgetBuilder(context);
+        wb.init("DataScroller", ds.resolveWidgetVar(), clientId)
+            .attr("chunkSize", chunkSize)
+            .attr("totalSize", ds.getRowCount())
+            .attr("loadEvent", loadEvent)
+            .attr("mode", ds.getMode(), "document")
+            .attr("buffer", ds.getBuffer())
+            .finish();
+    }
+
     protected void loadChunk(FacesContext context, DataScroller ds, int start, int size) throws IOException {
         loadChunk(context, ds, start, size, false); // alreadyLoaded is false by default
     }
@@ -133,20 +147,6 @@ public class DataScrollerRenderer extends CoreRenderer {
         }
         ds.setRowIndex(-1);
     }    
-    
-    protected void encodeScript(FacesContext context, DataScroller ds, int chunkSize) throws IOException {
-        String clientId = ds.getClientId(context);
-        String loadEvent = ds.getFacet("loader") == null ? "scroll" : "manual";
-        
-        WidgetBuilder wb = getWidgetBuilder(context);
-        wb.init("DataScroller", ds.resolveWidgetVar(), clientId)
-            .attr("chunkSize", chunkSize)
-            .attr("totalSize", ds.getRowCount())
-            .attr("loadEvent", loadEvent)
-            .attr("mode", ds.getMode(), "document")
-            .attr("buffer", ds.getBuffer())
-            .finish();
-    }
     
     protected void loadLazyData(DataScroller ds, int start, int size) {
         LazyDataModel lazyModel = (LazyDataModel) ds.getValue();
